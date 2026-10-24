@@ -81,8 +81,8 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
   }
 
   return (
-    <div className="form-widget">
-      <div>
+    <div className="form-widget profile-form">
+      <div className="profile-field">
         <label htmlFor="ufid">UFID</label>
         <input
           id="ufid"
@@ -91,7 +91,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
           readOnly
         />
       </div>
-      <div>
+      <div className="profile-field">
         <label htmlFor="username">Username</label>
         <input
           id="username"
@@ -100,7 +100,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
           onChange={(e) => setUsername(e.target.value)}
         />
       </div>
-      <div>
+      <div className="profile-field">
         <label htmlFor="bio">Bio</label>
         <input
           id="bio"
@@ -112,7 +112,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
       <div>
         <button
-          className="button primary block"
+          className="button primary block profile-submit"
           onClick={() => updateProfile({ username, bio})}
           disabled={loading}
         >
@@ -122,7 +122,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
       <div>
         <form action="/auth/signout" method="post">
-          <button className="button block" type="submit">
+          <button className="button block profile-signout" type="submit">
             Sign out
           </button>
         </form>

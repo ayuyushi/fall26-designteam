@@ -3,44 +3,63 @@ import Link from 'next/link'
 
 function SignUpForm() {
   return (
-    <div>
-      <h2>Sign Up</h2>
+    <section className="auth-card signup-card" aria-labelledby="signup-title">
+      <h2 id="signup-title">Sign Up</h2>
       <form>
-        <label htmlFor="email">Email:</label>
-        <input id="email" name="email" type="email" required />
-        <label htmlFor="password">Password:</label>
-        <input id="password" name="password" type="password" required />
-        <label htmlFor="ufid">UFID:</label>
-        <input id="ufid" name="ufid" type="text" required />
-        <label htmlFor="username">Username:</label>
-        <input id="username" name="username" type="text" required />
-        <button formAction={signup}>Sign up</button>
+        <div className="auth-field">
+          <label htmlFor="signup-email">Email</label>
+          <input id="signup-email" name="email" type="email" autoComplete="email" required />
+        </div>
+        <div className="auth-field">
+          <label htmlFor="signup-password">Password</label>
+          <input id="signup-password" name="password" type="password" autoComplete="new-password" required />
+        </div>
+        <div className="auth-field">
+          <label htmlFor="signup-ufid">UFID</label>
+          <input id="signup-ufid" name="ufid" type="text" required />
+        </div>
+        <div className="auth-field">
+          <label htmlFor="signup-username">Username</label>
+          <input id="signup-username" name="username" type="text" autoComplete="username" required />
+        </div>
+        <button className="auth-submit" formAction={signup}>Sign up</button>
       </form>
-    </div>
+    </section>
   )
 }
 
 function LoginForm() {
   return (
-    <div>
-      <h2>Login</h2>
+    <section className="auth-card login-card" aria-labelledby="login-title">
+      <h2 id="login-title">Login</h2>
       <form>
-        <label htmlFor="email">Email:</label>
-        <input id="email" name="email" type="email" required />
-        <label htmlFor="password">Password:</label>
-        <input id="password" name="password" type="password" required />
-        <button formAction={login}>Log in</button>
+        <div className="auth-field">
+          <label htmlFor="login-email">Email</label>
+          <input id="login-email" name="email" type="email" autoComplete="email" required />
+        </div>
+        <div className="auth-field">
+          <label htmlFor="login-password">Password</label>
+          <input id="login-password" name="password" type="password" autoComplete="current-password" required />
+        </div>
+        <button className="auth-submit" formAction={login}>Log in</button>
       </form>
-    </div>
+    </section>
   )
 }
 
 export default function LoginPage() {
   return (
-    <div>
-      <Link href="/">Return to home page</Link>
-      <LoginForm/>
-      <SignUpForm/>
-    </div>
+    <main className="auth-page">
+      <div className="auth-shell">
+        <header className="site-header auth-header">
+          <Link className="auth-home-link" href="/">Home</Link>
+          <p>ChompIn</p>
+        </header>
+        <div className="auth-content">
+          <LoginForm />
+          <SignUpForm />
+        </div>
+      </div>
+    </main>
   )
 }
