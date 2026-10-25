@@ -1,7 +1,6 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 
 export async function createNote(formData: FormData) {
@@ -21,7 +20,25 @@ export async function createNote(formData: FormData) {
     const { data, error } = await supabase
         .from("note")
         .insert(input_data)
-        .select()
+        .select('id, class_title, class_code, semester, professor, unit, description, is_public')
+
+    if (error) {
+        console.error(error)
+        return {success: false, error: error}
+    }
+
+    revalidatePath('/notes')
+    return {success: true, data: data};
+}
+
+export async function getNote(noteId: string) {
+    const supabase = await createClient()
+
+    const { data, error } = await supabase
+        .from("note")
+        .select('id, class_title, class_code, semester, professor, unit, description, is_public')
+        .eq("id", noteId)
+        .maybeSingle()
 
     if (error) {
         console.error(error)
@@ -31,17 +48,35 @@ export async function createNote(formData: FormData) {
     return {success: true, data: data};
 }
 
+
 export async function getNotes() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('note')
+    .select('*');
+
+  if (error) {
+    console.error(error)
+    return {success: false, error: error}
+  }
+
+  return {success: true, data: data};
+}
+
+export async function deleteNote(noteId: string) {
     const supabase = await createClient()
 
-    const { data, error } = await supabase
+    const { error } = await supabase
         .from("note")
-        .select('*')
+        .delete()
+        .eq("id", noteId)
 
     if (error) {
         console.error(error)
         return {success: false, error: error}
     }
 
-    return {success: true, data: data};
+    revalidatePath('/notes')
+    return {success: true};
 }

@@ -1,23 +1,29 @@
 import Link from 'next/link';
-import { getNotes } from "./actions";
+import DeleteNoteButton from './delete_note_button';
 
-export default async function NotesList() {
-    const {success, data, error} = await getNotes();
+type Note = {
+    id: string;
+    class_title: string;
+    semester: string;
+    description: string | null;
+};
 
-    if (!success) {
-        console.error(error)
-        return (<div className="notes-list"></div>);
-    }
+type NotesListProps = {
+    notes: Note[];
+};
 
+export default function NotesList({ notes }: NotesListProps) {
     return (
-        <div className="notes-list">
-            {data!.map((note) => (
+        <ul className="notes-list">
+            {notes.map((note) => (
                 <li key={note.id}>
                     <Link href={`/notes/${note.id}`}>
-                        {note.class_title}
+                        <h2>{note.class_title} ({note.semester})</h2>
+                        <p>{note.description}</p>
                     </Link>
+                    <DeleteNoteButton noteId={note.id} />
                 </li>
             ))}
-        </div>
+        </ul>
     );
 }

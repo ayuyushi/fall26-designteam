@@ -61,19 +61,6 @@ function formToFiles(formData: FormData) {
   return files;
 }
 
-async function requireAuthenticatedUser() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error)
-    throw error;
-  
-  if (!data.user)
-    throw new RequestValidationError("Sign in before managing files.");
-
-  return supabase;
-}
-
 async function removeUploadedObjects(bucketName: string, objectKeys: string[]) {
   const failures: string[] = [];
   for (const key of objectKeys) {
@@ -104,20 +91,7 @@ export async function uploadFiles(formData: FormData, noteId: string) {
     };
   }
 
-  let supabase: Awaited<ReturnType<typeof createClient>>;
-  try {
-    supabase = await requireAuthenticatedUser();
-  } catch (error) {
-    console.error("Could not authenticate file upload:", error);
-    return {
-      success: false,
-      error:
-        error instanceof RequestValidationError
-          ? error.message
-          : "Could not verify your sign-in. Please try again.",
-    };
-  }
-
+  const supabase = await createClient();
   const bucketName = getBucketName();
   const objectKeys: string[] = [];
   const metadata = [];
@@ -207,29 +181,58 @@ export async function uploadFiles(formData: FormData, noteId: string) {
 }
 
 export async function getFile(noteId: string, fileId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("file")
+    .select("*")
+    .eq("note_id", noteId)
+    .eq("file_id", fileId)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+  if (!data) {
+    return { success: false, error: "File not found." };
+  }
+
+  return { success: true, data: data };
+}
+
+export async function getFiles(noteId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("file")
+    .select("*")
+    .eq("note_id", noteId)
+
+  if (error) {
+    throw error;
+  }
+  if (!data) {
+    return { success: false, error: "File not found." };
+  }
+
+  return { success: true, data: data };
+}
+
+export async function getFileUrl(noteId: string, fileId: string) {
   try {
-    const supabase = await requireAuthenticatedUser();
-    const { data, error } = await supabase
-      .from("file")
-      .select("file_id")
-      .eq("note_id", noteId)
-      .eq("file_id", fileId)
-      .maybeSingle();
+    const { success, data: file } = await getFile(noteId, fileId);
+    if (!success || !file)
+      return { success: false, error: "File does not exist in supabase"};
 
-    if (error) {
-      throw error;
-    }
-    if (!data) {
-      return { success: false, error: "File not found." };
-    }
-
+    const encodedFilename = encodeURIComponent(file.name).replace(
+      /['()*]/g,
+      (character) => `%${character.charCodeAt(0).toString(16).toUpperCase()}`
+    );
     const url = await getSignedUrl(
       r2Client,
       new GetObjectCommand({
         Bucket: getBucketName(),
-        Key: fileId,
-        ResponseContentDisposition: "attachment",
-        ResponseContentType: "application/octet-stream",
+        Key: file.file_id,
+        ResponseContentDisposition: `attachment; filename*=UTF-8''${encodedFilename}`,
+        ResponseContentType: file.type || "application/octet-stream",
       }),
       { expiresIn: SIGNED_URL_TTL_SECONDS }
     );
@@ -249,21 +252,11 @@ export async function getFile(noteId: string, fileId: string) {
 
 export async function deleteFile(noteId: string, fileId: string) {
   try {
-    const supabase = await requireAuthenticatedUser();
-    const { data: existingFile, error: readError } = await supabase
-      .from("file")
-      .select("file_id, name, size, type")
-      .eq("note_id", noteId)
-      .eq("file_id", fileId)
-      .maybeSingle();
+    const {success, data} = await getFile(noteId, fileId);
+    if (!success)
+      return { success: false, error: "File does not exist in supabase"};
 
-    if (readError) {
-      throw readError;
-    }
-    if (!existingFile) {
-      return { success: false, error: "File not found." };
-    }
-
+    const supabase = await createClient();
     const { data: deletedFile, error: deleteError } = await supabase
       .from("file")
       .delete()
@@ -294,10 +287,10 @@ export async function deleteFile(noteId: string, fileId: string) {
       try {
         const { error } = await supabase.from("file").insert({
           note_id: noteId,
-          file_id: existingFile.file_id,
-          name: existingFile.name,
-          size: existingFile.size,
-          type: existingFile.type,
+          file_id: data.file_id,
+          name: data.name,
+          size: data.size,
+          type: data.type,
         });
         restoreError = error;
       } catch (error) {

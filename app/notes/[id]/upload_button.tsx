@@ -3,7 +3,7 @@
 import { uploadFiles } from "@/app/notes/[id]/file_upload";
 import { useState } from "react";
 
-export default function UploadFile({ id }: {id: string}) {
+export default function UploadFile({ noteId }: { noteId: string}) {
   const [loading, setLoading] = useState(false);
   
   async function handleFormSubmit(e: React.SubmitEvent<HTMLFormElement>) {
@@ -12,7 +12,7 @@ export default function UploadFile({ id }: {id: string}) {
 
     try {
       const formData = new FormData(e.currentTarget);
-      const response = await uploadFiles(formData, id);
+      const response = await uploadFiles(formData, noteId);
 
       if (response.success) {
         alert("Files uploaded and metadata saved to Supabase successfully!");
