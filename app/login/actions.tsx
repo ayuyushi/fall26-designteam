@@ -6,7 +6,6 @@ import { createClient } from '@/utils/supabase/server'
 
 export async function login(formData: FormData) {
   const supabase = await createClient()
-
   // type-casting here for convenience
   // in practice, you should validate your inputs
   const data = {
@@ -26,12 +25,17 @@ export async function login(formData: FormData) {
 
 export async function signup(formData: FormData) {
   const supabase = await createClient()
+  const email = (formData.get('email') as string).trim().toLowerCase()
+  if(!email.endsWith('@ufl.edu')) {
+    redirect('/error?reason=invalid-email')
+  }
+
 
   //Test make fake user
   // type-casting here for convenience: validate inputs!!!
 
   const data = {
-    email: formData.get('email') as string,
+    email: email,
     password: formData.get('password') as string,
     options: {
       data: {
@@ -49,5 +53,5 @@ export async function signup(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/account')
+  redirect('/check-email')
 }
