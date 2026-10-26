@@ -8,7 +8,7 @@ function SignUpForm() {
       <form>
         <div className="auth-field">
           <label htmlFor="signup-email">Email</label>
-          <input id="signup-email" name="email" type="email" autoComplete="email" required />
+          <input id="signup-email" name="email" type="email" autoComplete="email" pattern=".+@ufl\.edu" title="Please use your UF email address (@ufl.edu) to sign up" required />
         </div>
         <div className="auth-field">
           <label htmlFor="signup-password">Password</label>

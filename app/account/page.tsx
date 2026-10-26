@@ -1,16 +1,22 @@
 import AccountForm from './account_form'
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 export default async function Account() {
   const supabase = await createClient()
 
   const { data: claimsData } = await supabase.auth.getClaims()
+  if(!claimsData?.claims){
+    redirect('/login') //redirect to login page if not valid authentication
+  }
 
   return (
     <main className="site-page">
       <header className="site-header">
         <Link className="site-header-link" href="/">Home</Link>
+        <br></br>
+        <Link className="site-header-link" href="/notes">Notes page</Link>
         <p>ChompIn</p>
         <span className="site-header-spacer" aria-hidden="true" />
       </header>
