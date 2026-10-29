@@ -7,20 +7,12 @@ function SignUpForm() {
       <h2 id="signup-title">Sign Up</h2>
       <form>
         <div className="auth-field">
-          <label htmlFor="signup-email">Email</label>
+          <label htmlFor="signup-email">UF Email</label>
           <input id="signup-email" name="email" type="email" autoComplete="email" pattern=".+@ufl\.edu" title="Please use your UF email address (@ufl.edu) to sign up" required />
         </div>
         <div className="auth-field">
           <label htmlFor="signup-password">Password</label>
           <input id="signup-password" name="password" type="password" autoComplete="new-password" required />
-        </div>
-        <div className="auth-field">
-          <label htmlFor="signup-ufid">UFID</label>
-          <input id="signup-ufid" name="ufid" type="text" required />
-        </div>
-        <div className="auth-field">
-          <label htmlFor="signup-username">Username</label>
-          <input id="signup-username" name="username" type="text" autoComplete="username" required />
         </div>
         <button className="auth-submit" formAction={signup}>Sign up</button>
       </form>
@@ -34,7 +26,7 @@ function LoginForm() {
       <h2 id="login-title">Login</h2>
       <form>
         <div className="auth-field">
-          <label htmlFor="login-email">Email</label>
+          <label htmlFor="login-email">UF Email</label>
           <input id="login-email" name="email" type="email" autoComplete="email" required />
         </div>
         <div className="auth-field">

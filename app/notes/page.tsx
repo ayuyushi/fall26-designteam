@@ -1,9 +1,9 @@
-import { getNotes } from './actions';
+import { getOwnNotes, getPublicNotes } from './actions';
 import NoteForm from './note_form';
 import NotesList from './note_list';
 
 export default async function NotesPage() {
-  const {success, data: notes, error} = await getNotes();
+  const {success, data: notes, error} = await getOwnNotes();
 
   if (!success) {
     console.error('Failed to load notes:', error);
