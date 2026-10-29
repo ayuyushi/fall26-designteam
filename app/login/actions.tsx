@@ -30,22 +30,24 @@ export async function signup(formData: FormData) {
     redirect('/error?reason=invalid-email')
   }
 
-
-  //Test make fake user
   // type-casting here for convenience: validate inputs!!!
-
   const data = {
     email: email,
     password: formData.get('password') as string,
-    options: {
-      data: {
-        ufid: formData.get('ufid') as string,
-        username: formData.get('username') as string
-      }
-    }
   }
 
   const { error } = await supabase.auth.signUp(data)
+
+  switch (error?.code) {
+    case 'signup_disabled':
+      console.error('Signups are currently disabled on this platform.');
+      break;
+    case 'weak_password':
+      console.error('Weak or invalid password detected. Please input a different one.');
+      break;
+    default:
+      console.error(`Signup failed: ${error?.message}`);
+  }
 
   if (error) {
     console.error(error)

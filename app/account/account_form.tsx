@@ -7,8 +7,6 @@ type Claims = { sub: string; email?: string; [key: string]: unknown }
 export default function AccountForm({ claims }: { claims: Claims | null }) {
   const supabase = useMemo(() => createClient(), [])
   const [loading, setLoading] = useState(true)
-  const [ufid, setUfid] = useState<string | null>(null)
-  const [username, setUsername] = useState<string | null>(null)
   const [bio, setBio] = useState<string | null>(null)
 
   const getProfile = useCallback(async () => {
@@ -23,7 +21,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
       const userId = claims.sub
       const { data, error, status } = await supabase
         .from('profile')
-        .select(`ufid, username, bio`)
+        .select(`bio`)
         .eq('id', userId)
         .single()
 
@@ -33,8 +31,6 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
       }
 
       if (data) {
-        setUfid(data.ufid)
-        setUsername(data.username)
         setBio(data.bio)
       }
     } catch (error) {
@@ -49,13 +45,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
     getProfile()
   }, [claims, getProfile])
 
-  async function updateProfile({
-    username,
-    bio
-  }: {
-    username: string | null
-    bio: string | null
-  }) {
+  async function updateProfile({bio}: {bio: string | null}) {
     try {
       if (!claims?.sub) {
         alert('You must be logged in to update your profile')
@@ -65,7 +55,6 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
       setLoading(true)
   
       const { error } = await supabase.from('profile').update({
-        username,
         bio,
         updated_at: new Date().toISOString(),
       })
@@ -83,21 +72,12 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
   return (
     <div className="form-widget profile-form">
       <div className="profile-field">
-        <label htmlFor="ufid">UFID</label>
+        <label htmlFor="email">UF Email</label>
         <input
-          id="ufid"
+          id="email"
           type="text"
-          value={ufid || 'NOT LOGGED IN'}
+          value={claims?.email || 'Unknown'}
           readOnly
-        />
-      </div>
-      <div className="profile-field">
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          type="text"
-          value={username || ''}
-          onChange={(e) => setUsername(e.target.value)}
         />
       </div>
       <div className="profile-field">
@@ -105,7 +85,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
         <input
           id="bio"
           type="url"
-          value={bio || ''}
+          value={bio || 'No Bio'}
           onChange={(e) => setBio(e.target.value)}
         />
       </div>
@@ -113,7 +93,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
       <div>
         <button
           className="button primary block profile-submit"
-          onClick={() => updateProfile({ username, bio})}
+          onClick={() => updateProfile({bio})}
           disabled={loading}
         >
           {loading ? 'Loading ...' : 'Update'}
