@@ -1,6 +1,6 @@
 "use client";
 
-import { uploadFiles } from "@/app/notes/[id]/file_upload";
+import { uploadFiles } from "@/services/file-data";
 import { useState } from "react";
 
 export default function UploadFile({ noteId }: { noteId: string}) {
