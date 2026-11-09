@@ -15,10 +15,8 @@ export default async function Account() {
     <main className="site-page">
       <header className="site-header">
         <Link className="site-header-link" href="/">Home</Link>
-        <br></br>
-        <Link className="site-header-link" href="/notes">Notes page</Link>
         <p>ChompIn</p>
-        <span className="site-header-spacer" aria-hidden="true" />
+        <Link className="site-header-link" href="/notes">Notes page</Link>
       </header>
       <section className="site-content account-content">
         <div className="account-intro">
