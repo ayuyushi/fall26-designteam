@@ -11,10 +11,9 @@ type NoteCardProps = {
 
 export default function NoteCard({ note }: NoteCardProps) {
     return (
-    <section className="note-detail-card">
-      <p className="site-eyebrow">Class note</p>
-      <h1>{note.class_title}</h1>
-      <dl className="note-details">
+    <section>
+        <h1>{note.class_title}</h1>
+      <dl>
         <div>
           <dt>Class code</dt>
           <dd>{note.class_code}</dd>
@@ -33,7 +32,7 @@ export default function NoteCard({ note }: NoteCardProps) {
         </div>
         <div>
           <dt>Description</dt>
-          <dd>{note.description || 'No description provided.'}</dd>
+          <dd>{note.description || 'No description'}</dd>
         </div>
       </dl>
     </section>

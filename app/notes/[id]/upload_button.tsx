@@ -29,29 +29,20 @@ export default function UploadFile({ noteId }: { noteId: string}) {
   }
 
   return (
-    <section className="upload-card" aria-labelledby="upload-files-title">
-      <div className="note-card-heading">
-        <p className="site-eyebrow">Add resources</p>
-        <h2 id="upload-files-title">Upload files</h2>
-      </div>
-      <p className="upload-help">Choose PDF, DOC, DOCX, JPG, or PNG files. Each file must be 5 MB or smaller.</p>
-      <form onSubmit={handleFormSubmit} className="upload-form">
-        <label className="upload-file-label" htmlFor="file_upload">Choose files</label>
-        <input
-          type="file"
-          id="file_upload"
-          name="file_upload"
-          accept="image/jpeg,image/png,.doc,.docx,.pdf"
-          multiple
-          required />
-        <button
-          className="notes-primary-button"
-          type="submit"
-          disabled={loading}
-        >
-          {loading ? "Uploading..." : "Upload files"}
-        </button>
-      </form>
-    </section>
+    <form onSubmit={handleFormSubmit} className="flex flex-col gap-4 max-w-sm p-4">
+      <input 
+        type="file" 
+        id="file_upload" 
+        name="file_upload" 
+        accept="image/jpeg,image/png,.doc,.docx,.pdf" 
+        multiple 
+        required />
+      <button 
+        type="submit" 
+        disabled={loading}
+      >
+        {loading ? "Processing..." : "Upload & Save"}
+      </button>
+    </form>
   );
 }

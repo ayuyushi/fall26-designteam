@@ -48,13 +48,37 @@ export async function getNote(noteId: string) {
     return {success: true, data: data};
 }
 
-
-export async function getNotes() {
+export async function getPublicNotes() {
   const supabase = await createClient();
+  const { data: claimsData } = await supabase.auth.getClaims()
+
+  if(!claimsData?.claims)
+    throw new Error("NOT LOGGED IN TRYING TO GET NOTES")
 
   const { data, error } = await supabase
     .from('note')
-    .select('*');
+    .select('*')
+    .eq('is_public', true);
+
+  if (error) {
+    console.error(error)
+    return {success: false, error: error}
+  }
+
+  return {success: true, data: data};
+}
+
+export async function getOwnNotes() {
+  const supabase = await createClient();
+  const { data: claimsData } = await supabase.auth.getClaims()
+
+  if(!claimsData?.claims)
+    throw new Error("NOT LOGGED IN TRYING TO GET NOTES")
+
+  const { data, error } = await supabase
+    .from('note')
+    .select('*')
+    .eq('author_id', claimsData.claims.sub);
 
   if (error) {
     console.error(error)
