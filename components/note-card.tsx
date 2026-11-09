@@ -2,9 +2,10 @@ import type Note from '@/types/note'
 
 export default function NoteCard({ note }: {note: Note}) {
     return (
-    <section>
-        <h1>{note.class_title}</h1>
-      <dl>
+    <section className="note-detail-card">
+      <p className="site-eyebrow">Class note</p>
+      <h1>{note.class_title}</h1>
+      <dl className="note-details">
         <div>
           <dt>Class code</dt>
           <dd>{note.class_code}</dd>
@@ -23,7 +24,7 @@ export default function NoteCard({ note }: {note: Note}) {
         </div>
         <div>
           <dt>Description</dt>
-          <dd>{note.description || 'No description'}</dd>
+          <dd>{note.description || 'No description provided.'}</dd>
         </div>
       </dl>
     </section>

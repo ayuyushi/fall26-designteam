@@ -41,8 +41,11 @@ export default function NoteForm() {
   }
 
   return (
-    <section className="new-note-card" aria-labelledby="create-new-note">
-        <h2 id="new-note-title">Create New Note</h2>
+    <section className="new-note-card" aria-labelledby="new-note-title">
+        <div className="note-card-heading">
+          <p className="site-eyebrow">Start sharing</p>
+          <h2 id="new-note-title">Create a note</h2>
+        </div>
         <form onSubmit={handleFormSubmit}>
             <div className="note-field">
                 <label htmlFor="class_title">Class Title</label>
@@ -61,7 +64,7 @@ export default function NoteForm() {
                 <input id="professor" name="professor" type="text" autoComplete="professor" />
             </div>
             <div className="note-field">
-                <label htmlFor="unit">unit</label>
+                <label htmlFor="unit">Unit</label>
                 <input id="unit" name="unit" type="text" />
             </div>
             <div className="note-field">
@@ -69,10 +72,11 @@ export default function NoteForm() {
                 <input id="description" name="description" type="text" />
             </div>
             <button 
+                className="notes-primary-button"
                 type="submit" 
                 disabled={loading}
             >
-                {loading ? "Processing..." : "Create New Note"}
+                {loading ? "Creating..." : "Create note"}
             </button>
         </form>
     </section>  

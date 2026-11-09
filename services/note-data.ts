@@ -38,37 +38,42 @@ export async function getNote(noteId: string) {
 }
 
 export async function getPublicNotes() {
-  const supabase = await createClient();
+    const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from('note')
-    .select('*')
-    .eq('is_public', true);
+    const { data, error } = await supabase
+        .from('note')
+        .select('*')
+        .eq('is_public', true);
 
-  if (error) {
-    console.error(error)
-  }
+    if (error) {
+        console.error('Failed to load public notes:', error);
+    }
 
-  return {data: data, error: error};
+    return { data, error };
 }
 
 export async function getOwnNotes() {
-  const supabase = await createClient();
-  const { data: claimsData } = await supabase.auth.getClaims()
+    const supabase = await createClient();
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
 
-  if(!claimsData?.claims)
-    throw new Error("NOT LOGGED IN TRYING TO GET NOTES")
+    if (claimsError) {
+        console.error('Failed to verify the current user:', claimsError);
+        throw new Error('Failed to verify the current user.');
+    }
+    if (!claimsData?.claims) {
+        throw new Error('A user must be signed in to load their collection.');
+    }
 
-  const { data, error } = await supabase
-    .from('note')
-    .select('*')
-    .eq('author_id', claimsData.claims.sub);
+    const { data, error } = await supabase
+        .from('note')
+        .select('*')
+        .eq('author_id', claimsData.claims.sub);
 
-  if (error) {
-    console.error(error)
-  }
+    if (error) {
+        console.error('Failed to load the user collection:', error);
+    }
 
-  return {data: data, error: error};
+    return { data, error };
 }
 
 export async function deleteNote(noteId: string) {
