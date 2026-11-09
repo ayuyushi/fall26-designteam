@@ -1,10 +1,9 @@
 import Link from 'next/link';
-import { getNotes } from './actions';
-import NoteForm from './note_form';
-import NotesList from './note_list';
+import { getPublicNotes } from '@/services/note-data';
+import NotesList from './note-list';
 
 export default async function NotesPage() {
-  const {success, data: notes, error} = await getNotes();
+  const { data: notes, error } = await getPublicNotes();
 
   if (error) {
     console.error('Failed to load notes:', error);
@@ -23,9 +22,9 @@ export default async function NotesPage() {
       </header>
       <section className="site-content notes-page-content">
         <div className="account-intro notes-intro">
-          <p className="site-eyebrow">Your library</p>
-          <h1>Class notes</h1>
-          <p>Create a note to organize and share resources for your classes.</p>
+          <p className="site-eyebrow">Explore and share</p>
+          <h1>Search notes</h1>
+          <p>Browse notes shared by the ChompIn community.</p>
         </div>
         <section className="notes-section" aria-labelledby="public-notes-title">
           <div className="notes-section-heading">
