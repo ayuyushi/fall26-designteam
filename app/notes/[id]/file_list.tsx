@@ -51,40 +51,29 @@ export default function FileList({ files }: FileListProps) {
     }
 
     return (
-        <section className="file-list-card" aria-labelledby="current-files-title">
-            <div className="note-card-heading">
-                <p className="site-eyebrow">Resources</p>
-                <h2 id="current-files-title">Current files</h2>
-            </div>
-            {files.length === 0 ? (
-                <p className="files-empty-state">No files have been added to this note yet.</p>
-            ) : (
-            <ul className="note-files-list">
+        <section>
+            <h2>Current Files</h2>
+            <ul>
                 {files.map((file) => (
-                    <li className="note-file-item" key={file.file_id}>
-                        <h3>{file.name}</h3>
-                        <div className="note-file-actions">
+                    <li key={file.file_id}>
+                        <h2>{file.name}</h2>
                         <button
-                            className="notes-primary-button"
                             type="button"
                             disabled={busyFileId === file.file_id}
                             onClick={() => downloadFile(file.note_id, file.file_id)}
                         >
-                            {busyFileId === file.file_id ? 'Working...' : 'Download'}
+                            Download File
                         </button>
                         <button
-                            className="notes-secondary-button"
                             type="button"
                             disabled={busyFileId === file.file_id}
                             onClick={() => removeFile(file.note_id, file.file_id)}
                         >
-                            Delete
+                            DELETE FILE
                         </button>
-                        </div>
                     </li>
                 ))}
             </ul>
-            )}
         </section>
     );
 }
