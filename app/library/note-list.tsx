@@ -1,23 +1,13 @@
 import Link from 'next/link';
-import DeleteNoteButton from './delete_note_button';
+import DeleteNoteButton from './delete-note-button';
+import type Note from '@/types/note';
 
-type Note = {
-    id: string;
-    class_title: string;
-    semester: string;
-    description: string | null;
-};
-
-type NotesListProps = {
-    notes: Note[];
-};
-
-export default function NotesList({ notes }: NotesListProps) {
+export default function NotesList({ notes }: { notes: Note[]} ) {
     return (
         <ul className="notes-list">
             {notes.map((note) => (
                 <li key={note.id}>
-                    <Link href={`/notes/${note.id}`}>
+                    <Link href={`/library/${note.id}`}>
                         <h2>{note.class_title} ({note.semester})</h2>
                         <p>{note.description}</p>
                     </Link>

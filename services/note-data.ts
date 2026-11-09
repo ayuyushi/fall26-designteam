@@ -1,34 +1,24 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
-import { createClient } from '@/utils/supabase/server'
+import { revalidatePath } from 'next/cache';
+import { createClient } from '@/utils/supabase/server';
+import type Note from '@/types/note';
 
-export async function createNote(formData: FormData) {
+export async function createNote(noteData: Partial<Note> | Partial<Note>[]) {
     const supabase = await createClient()
-
-    //TODO: VALIDATE
-    const input_data = {
-        class_title: formData.get('class_title')! as string,
-        class_code:  formData.get('class_code')! as string,
-        semester:  formData.get('semester')! as string,
-        professor:  formData.get('professor') as string ?? "Unknown",
-        unit:  formData.get('unit') as string ?? "Unknown",
-        description:  formData.get('description') as string ?? "",
-        is_public: true,
-    }
 
     const { data, error } = await supabase
         .from("note")
-        .insert(input_data)
+        .insert(noteData)
         .select('id, class_title, class_code, semester, professor, unit, description, is_public')
 
     if (error) {
         console.error(error)
-        return {success: false, error: error}
     }
 
     revalidatePath('/notes')
-    return {success: true, data: data};
+    revalidatePath('/library')
+    return {data: data, error: error};
 }
 
 export async function getNote(noteId: string) {
@@ -42,18 +32,13 @@ export async function getNote(noteId: string) {
 
     if (error) {
         console.error(error)
-        return {success: false, error: error}
     }
 
-    return {success: true, data: data};
+    return {data: data, error: error};
 }
 
 export async function getPublicNotes() {
   const supabase = await createClient();
-  const { data: claimsData } = await supabase.auth.getClaims()
-
-  if(!claimsData?.claims)
-    throw new Error("NOT LOGGED IN TRYING TO GET NOTES")
 
   const { data, error } = await supabase
     .from('note')
@@ -62,10 +47,9 @@ export async function getPublicNotes() {
 
   if (error) {
     console.error(error)
-    return {success: false, error: error}
   }
 
-  return {success: true, data: data};
+  return {data: data, error: error};
 }
 
 export async function getOwnNotes() {
@@ -82,25 +66,24 @@ export async function getOwnNotes() {
 
   if (error) {
     console.error(error)
-    return {success: false, error: error}
   }
 
-  return {success: true, data: data};
+  return {data: data, error: error};
 }
 
 export async function deleteNote(noteId: string) {
     const supabase = await createClient()
 
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from("note")
         .delete()
         .eq("id", noteId)
 
     if (error) {
         console.error(error)
-        return {success: false, error: error}
     }
 
     revalidatePath('/notes')
-    return {success: true};
+    revalidatePath('/library')
+    return {data: data, error: error};
 }

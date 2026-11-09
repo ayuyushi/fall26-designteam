@@ -1,21 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { deleteNote } from './actions';
+import { deleteNote } from '@/services/note-data';
 
-type DeleteNoteButtonProps = {
-  noteId: string;
-};
-
-export default function DeleteNoteButton({ noteId }: DeleteNoteButtonProps) {
+export default function DeleteNoteButton({ noteId }: {noteId: string}) {
   const [deleting, setDeleting] = useState(false);
 
   async function handleDelete() {
     setDeleting(true);
     try {
-      const result = await deleteNote(noteId);
-      if (!result.success) {
-        console.error('Failed to delete note:', result.error);
+      const { error } = await deleteNote(noteId);
+      if (error) {
+        console.error('Failed to delete note:', error);
         window.alert('Could not delete the note. Please try again.');
       }
     } catch (error) {

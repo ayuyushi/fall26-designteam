@@ -1,7 +1,8 @@
 "use client";
 
-import { createNote } from "./actions";
+import { createNote } from "@/services/note-data";
 import { useState } from "react";
+import type Note from '@/types/note';
 
 export default function NoteForm() {
   const [loading, setLoading] = useState(false);
@@ -12,12 +13,23 @@ export default function NoteForm() {
 
     try {
       const formData = new FormData(e.currentTarget);
-      const response = await createNote(formData);
 
-      if (response.success) {
-        alert("New note created in supabase successfully!");
+      const input_data: Partial<Note> = {
+          class_title: formData.get('class_title')! as string,
+          class_code:  formData.get('class_code')! as string,
+          semester:  formData.get('semester')! as string,
+          professor:  formData.get('professor') as string ?? "Unknown",
+          unit:  formData.get('unit') as string ?? "Unknown",
+          description:  formData.get('description') as string ?? "",
+          is_public: true,
+      }
+
+      const {data, error} = await createNote(input_data);
+
+      if (error) {
+        alert(`Upload failed: ${error}`);
       } else {
-        alert(`Upload failed: ${response.error}`);
+        alert("New note created in supabase successfully!");
       }
     } catch (error) {
       const message =

@@ -1,15 +1,6 @@
-type NoteCardProps = {
-    note: {
-        class_title: string;
-        class_code: string;
-        semester: string;
-        professor: string | null;
-        unit: string | null;
-        description: string | null;
-    };
-};
+import type Note from '@/types/note'
 
-export default function NoteCard({ note }: NoteCardProps) {
+export default function NoteCard({ note }: {note: Note}) {
     return (
     <section>
         <h1>{note.class_title}</h1>

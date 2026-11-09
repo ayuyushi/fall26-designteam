@@ -8,7 +8,7 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { randomUUID } from "crypto";
 import { r2Client } from "@/utils/cloudflare/r2";
-import { createClient } from "@/utils/supabase/server";
+import { uploadFileMetadata, getFilesMetadata, getFileMetadata, deleteFileMetadata } from "@/services/file-metadata";
 
 const MAX_TOTAL_SIZE_MEGABYTES = 5;
 const MAX_FILE_SIZE_BYTES = MAX_TOTAL_SIZE_MEGABYTES * 1024 * 1024;
@@ -91,7 +91,6 @@ export async function uploadFiles(formData: FormData, noteId: string) {
     };
   }
 
-  const supabase = await createClient();
   const bucketName = getBucketName();
   const objectKeys: string[] = [];
   const metadata = [];
@@ -120,7 +119,7 @@ export async function uploadFiles(formData: FormData, noteId: string) {
       });
     }
 
-    const { error } = await supabase.from("file").insert(metadata);
+    const { error } = await uploadFileMetadata(metadata);
     if (error) {
       throw error;
     }
@@ -132,11 +131,7 @@ export async function uploadFiles(formData: FormData, noteId: string) {
     let metadataCleanupFailed = false;
     if (objectKeys.length > 0) {
       try {
-        const { data: existingRows, error: lookupError } = await supabase
-          .from("file")
-          .select("file_id")
-          .eq("note_id", noteId)
-          .in("file_id", objectKeys);
+        const { data: existingRows, error: lookupError } = await getFilesMetadata(noteId, objectKeys);
         if (lookupError) {
           throw lookupError;
         }
@@ -145,12 +140,7 @@ export async function uploadFiles(formData: FormData, noteId: string) {
         }
 
         if (existingRows.length > 0) {
-          const { data: deletedRows, error: cleanupError } = await supabase
-            .from("file")
-            .delete()
-            .eq("note_id", noteId)
-            .in("file_id", objectKeys)
-            .select("file_id");
+          const { data: deletedRows, error: cleanupError } = await getFilesMetadata(noteId, objectKeys);
           if (cleanupError) {
             throw cleanupError;
           }
@@ -180,47 +170,13 @@ export async function uploadFiles(formData: FormData, noteId: string) {
   }
 }
 
-export async function getFile(noteId: string, fileId: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("file")
-    .select("*")
-    .eq("note_id", noteId)
-    .eq("file_id", fileId)
-    .maybeSingle();
-
-  if (error) {
-    throw error;
-  }
-  if (!data) {
-    return { success: false, error: "File not found." };
-  }
-
-  return { success: true, data: data };
-}
-
-export async function getFiles(noteId: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("file")
-    .select("*")
-    .eq("note_id", noteId)
-
-  if (error) {
-    throw error;
-  }
-  if (!data) {
-    return { success: false, error: "File not found." };
-  }
-
-  return { success: true, data: data };
-}
-
 export async function getFileUrl(noteId: string, fileId: string) {
   try {
-    const { success, data: file } = await getFile(noteId, fileId);
-    if (!success || !file)
-      return { success: false, error: "File does not exist in supabase"};
+    const { data: file, error } = await getFileMetadata(noteId, fileId);
+    if (error)
+      return { error: error };
+    if (!file)
+      return { error: "File does not exist in supabase" };
 
     const encodedFilename = encodeURIComponent(file.name).replace(
       /['()*]/g,
@@ -237,11 +193,10 @@ export async function getFileUrl(noteId: string, fileId: string) {
       { expiresIn: SIGNED_URL_TTL_SECONDS }
     );
 
-    return { success: true, url };
+    return { url };
   } catch (error) {
     console.error("Could not create a file download link:", error);
     return {
-      success: false,
       error:
         error instanceof RequestValidationError
           ? error.message
@@ -252,25 +207,17 @@ export async function getFileUrl(noteId: string, fileId: string) {
 
 export async function deleteFile(noteId: string, fileId: string) {
   try {
-    const {success, data} = await getFile(noteId, fileId);
-    if (!success)
-      return { success: false, error: "File does not exist in supabase"};
+    const {data, error} = await getFileMetadata(noteId, fileId);
+    if (error)
+      return { error: error };
 
-    const supabase = await createClient();
-    const { data: deletedFile, error: deleteError } = await supabase
-      .from("file")
-      .delete()
-      .eq("note_id", noteId)
-      .eq("file_id", fileId)
-      .select("file_id")
-      .maybeSingle();
+    const { data: deletedFile, error: deleteError } = await deleteFileMetadata(noteId, fileId);
 
     if (deleteError) {
       throw deleteError;
     }
     if (!deletedFile) {
       return {
-        success: false,
         error: "File metadata could not be removed. The stored file was kept.",
       };
     }
@@ -279,18 +226,18 @@ export async function deleteFile(noteId: string, fileId: string) {
       await r2Client.send(
         new DeleteObjectCommand({ Bucket: getBucketName(), Key: fileId })
       );
-      return { success: true };
+      return { data: data };
     } catch (storageError) {
       console.error("R2 file deletion failed; restoring metadata:", storageError);
 
       let restoreError: unknown;
       try {
-        const { error } = await supabase.from("file").insert({
+        const { error } = await uploadFileMetadata({
           note_id: noteId,
-          file_id: data.file_id,
-          name: data.name,
-          size: data.size,
-          type: data.type,
+          file_id: data!.file_id,
+          name: data!.name,
+          size: data!.size,
+          type: data!.type,
         });
         restoreError = error;
       } catch (error) {
@@ -302,7 +249,6 @@ export async function deleteFile(noteId: string, fileId: string) {
       }
 
       return {
-        success: false,
         error: restoreError
           ? "Delete failed and metadata could not be restored. Reconciliation is required."
           : "Delete failed. Metadata was restored, but storage state should be checked.",
@@ -312,7 +258,6 @@ export async function deleteFile(noteId: string, fileId: string) {
   } catch (error) {
     console.error("File deletion failed:", error);
     return {
-      success: false,
       error:
         error instanceof RequestValidationError
           ? error.message

@@ -1,4 +1,4 @@
-import AccountForm from './account_form'
+import AccountForm from './account-form'
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -16,7 +16,9 @@ export default async function Account() {
       <header className="site-header">
         <Link className="site-header-link" href="/">Home</Link>
         <br></br>
-        <Link className="site-header-link" href="/notes">Notes page</Link>
+        <Link className="site-header-link" href="/notes">Search Notes</Link>
+        <br></br>
+        <Link className="site-header-link" href="/library">My Collection</Link>
         <p>ChompIn</p>
         <span className="site-header-spacer" aria-hidden="true" />
       </header>

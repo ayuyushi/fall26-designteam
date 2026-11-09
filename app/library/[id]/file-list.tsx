@@ -2,14 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { deleteFile, getFileUrl } from './file_upload';
+import { deleteFile, getFileUrl } from '@/services/file-data';
+import File from "@/types/file";
 
 type FileListProps = {
-    files: {
-        note_id: string;
-        file_id: string;
-        name: string;
-    }[];
+    files: File[];
 };
 
 export default function FileList({ files }: FileListProps) {
@@ -19,12 +16,12 @@ export default function FileList({ files }: FileListProps) {
     async function downloadFile(noteId: string, fileId: string) {
         setBusyFileId(fileId);
         try {
-            const result = await getFileUrl(noteId, fileId);
-            if (!result.success || !result.url) {
-                window.alert(result.error ?? 'Could not download the file.');
+            const { url, error } = await getFileUrl(noteId, fileId);
+            if (error || !url) {
+                window.alert(error ?? 'Could not download the file.');
                 return;
             }
-            window.location.assign(result.url);
+            window.location.assign(url);
         } catch (error) {
             console.error('Could not download the file:', error);
             window.alert('Could not download the file.');
@@ -36,9 +33,9 @@ export default function FileList({ files }: FileListProps) {
     async function removeFile(noteId: string, fileId: string) {
         setBusyFileId(fileId);
         try {
-            const result = await deleteFile(noteId, fileId);
-            if (!result.success) {
-                window.alert(result.error ?? 'Could not delete the file.');
+            const { error } = await deleteFile(noteId, fileId);
+            if (error) {
+                window.alert(error ?? 'Could not delete the file.');
                 return;
             }
             router.refresh();
