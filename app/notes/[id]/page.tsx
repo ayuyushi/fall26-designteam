@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import NoteCard from './note_card'
 import FileList from './file_list';
@@ -40,10 +41,20 @@ export default async function NotePage({ params }: NotePageProps) {
   }
 
   return (
-    <main className="p-6">
-      <NoteCard note={note} />
-      <FileList files={files} />
-      <UploadFile noteId={noteId}/>
+    <main className="site-page">
+      <header className="site-header">
+        <Link className="site-header-link" href="/notes">Notes page</Link>
+        <p>ChompIn</p>
+        <Link className="site-header-link" href="/account">Profile</Link>
+      </header>
+      <section className="site-content note-detail-content">
+        <Link className="note-back-link" href="/notes">← Back to notes</Link>
+        <NoteCard note={note} />
+        <div className="file-workspace">
+          <FileList files={files} />
+          <UploadFile noteId={noteId}/>
+        </div>
+      </section>
     </main>
   );
 }
