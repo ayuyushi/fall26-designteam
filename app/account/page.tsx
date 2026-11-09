@@ -15,12 +15,11 @@ export default async function Account() {
     <main className="site-page">
       <header className="site-header">
         <Link className="site-header-link" href="/">Home</Link>
-        <br></br>
-        <Link className="site-header-link" href="/notes">Search Notes</Link>
-        <br></br>
-        <Link className="site-header-link" href="/library">My Collection</Link>
         <p>ChompIn</p>
-        <span className="site-header-spacer" aria-hidden="true" />
+        <nav className="site-header-nav" aria-label="Main navigation">
+          <Link className="site-header-link" href="/notes">Search notes</Link>
+          <Link className="site-header-link" href="/library">My collection</Link>
+        </nav>
       </header>
       <section className="site-content account-content">
         <div className="account-intro">
