@@ -39,7 +39,7 @@ export async function getNote(noteId: string) {
     return {data: data, error: error};
 }
 
-export async function getPublicNotes(filters: Record<string, string>, num: number = 20, offset: number) {
+export async function getPublicNotes(filters: Record<string, string> = {}, num: number = 20, offset: number = 0) {
     const supabase = await createClient();
 
     let query = supabase
@@ -61,7 +61,7 @@ export async function getPublicNotes(filters: Record<string, string>, num: numbe
     return { data, count, error };
 }
 
-export async function getOwnNotes(filters: Record<string, string>, num: number, offset: number) {
+export async function getOwnNotes(filters: Record<string, string> = {}, num: number = 20, offset: number = 0) {
     const supabase = await createClient();
     const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
 
