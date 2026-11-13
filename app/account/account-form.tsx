@@ -7,7 +7,7 @@ type Claims = { sub: string; email?: string; [key: string]: unknown }
 
 export default function AccountForm({ claims }: { claims: Claims | null }) {
   const [loading, setLoading] = useState(true)
-  const [bio, setBio] = useState<string>("")
+  const [bio, setBio] = useState<string | null>(null)
 
   const getOwnProfile = useCallback(async () => {
     try {
@@ -38,7 +38,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
     getOwnProfile()
   }, [claims, getOwnProfile])
 
-  async function updateOwnProfile({bio}: {bio: string}) {
+  async function updateOwnProfile({bio}: {bio: string | null}) {
     try {
       if (!claims?.sub) {
         alert('You must be logged in to update your profile')
@@ -77,8 +77,9 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
         <label htmlFor="bio">Bio</label>
         <input
           id="bio"
-          type="url"
-          value={bio || 'No Bio'}
+          type="text"
+          value={bio ? bio : ''}
+          placeholder='Your bio...'
           onChange={(e) => setBio(e.target.value)}
         />
       </div>
