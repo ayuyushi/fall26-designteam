@@ -1,5 +1,5 @@
 import { login, signup } from './actions'
-import Link from 'next/link'
+import Header from '@/components/header'
 
 function SignUpForm() {
   return (
@@ -43,10 +43,7 @@ export default function LoginPage() {
   return (
     <main className="auth-page">
       <div className="auth-shell">
-        <header className="site-header auth-header">
-          <Link className="auth-home-link" href="/">Home</Link>
-          <p>ChompIn</p>
-        </header>
+        <Header visibility='guest' current='/login'/>
         <div className="auth-content">
           <LoginForm />
           <SignUpForm />

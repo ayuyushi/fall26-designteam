@@ -1,6 +1,6 @@
 import AccountForm from './account-form'
+import Header from '@/components/header'
 import { createClient } from '@/utils/supabase/server'
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 export default async function Account() {
@@ -13,14 +13,7 @@ export default async function Account() {
 
   return (
     <main className="site-page">
-      <header className="site-header">
-        <Link className="site-header-link" href="/">Home</Link>
-        <p>ChompIn</p>
-        <nav className="site-header-nav" aria-label="Main navigation">
-          <Link className="site-header-link" href="/notes">Search notes</Link>
-          <Link className="site-header-link" href="/library">My collection</Link>
-        </nav>
-      </header>
+      <Header visibility='auth' current='/account'/>
       <section className="site-content account-content">
         <div className="account-intro">
           <p className="site-eyebrow">Your space</p>

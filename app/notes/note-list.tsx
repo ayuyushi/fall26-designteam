@@ -6,7 +6,7 @@ type NotesListProps = {
 };
 
 export default function NotesList({ notes }: NotesListProps) {
-    if (notes.length === 0) {
+    if (notes?.length === 0) {
         return (
             <div className="notes-empty-state">
                 <h3>No public notes yet</h3>
@@ -18,7 +18,7 @@ export default function NotesList({ notes }: NotesListProps) {
 
     return (
         <ul className="notes-list">
-            {notes.map((note) => (
+            {notes?.map((note) => (
                 <li key={note.id}>
                     <div className="note-list-card">
                         <Link className="note-list-link" href={`/notes/${note.id}`}>

@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { getFileUrl } from '@/services/file-data';
 import File from "@/types/file";
@@ -10,7 +9,6 @@ type FileListProps = {
 };
 
 export default function FileList({ files }: FileListProps) {
-    const router = useRouter();
     const [busyFileId, setBusyFileId] = useState<string | null>(null);
 
     async function downloadFile(noteId: string, fileId: string) {

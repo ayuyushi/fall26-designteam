@@ -8,26 +8,25 @@ export default function NoteForm() {
   const [loading, setLoading] = useState(false);
   
   async function handleFormSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-    e.preventDefault();
     setLoading(true);
 
     try {
       const formData = new FormData(e.currentTarget);
 
-      const input_data: Partial<Note> = {
+      const input_data: Omit<Note, 'id'> = {
           class_title: formData.get('class_title')! as string,
           class_code:  formData.get('class_code')! as string,
           semester:  formData.get('semester')! as string,
-          professor:  formData.get('professor') as string ?? "Unknown",
-          unit:  formData.get('unit') as string ?? "Unknown",
-          description:  formData.get('description') as string ?? "",
+          professor:  formData.get('professor') as string,
+          unit:  formData.get('unit') as string,
+          description:  formData.get('description') as string,
           is_public: true,
       }
 
-      const {data, error} = await createNote(input_data);
+      const { error } = await createNote(input_data);
 
       if (error) {
-        alert(`Upload failed: ${error}`);
+        alert(`Creation failed: ${error}`);
       } else {
         alert("New note created in supabase successfully!");
       }

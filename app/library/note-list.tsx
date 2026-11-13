@@ -2,8 +2,8 @@ import Link from 'next/link';
 import DeleteNoteButton from './delete-note-button';
 import type Note from '@/types/note';
 
-export default function NotesList({ notes }: { notes: Note[]} ) {
-    if (notes.length === 0) {
+export default function PrivateNotesList({ notes }: { notes: Note[]} ) {
+    if (notes?.length === 0) {
         return (
             <div className="notes-empty-state">
                 <h3>No notes in your collection yet</h3>
@@ -14,7 +14,7 @@ export default function NotesList({ notes }: { notes: Note[]} ) {
 
     return (
         <ul className="notes-list">
-            {notes.map((note) => (
+            {notes?.map((note) => (
                 <li key={note.id}>
                     <div className="note-list-card">
                         <Link className="note-list-link" href={`/library/${note.id}`}>
@@ -24,7 +24,7 @@ export default function NotesList({ notes }: { notes: Note[]} ) {
                             <span className="note-list-open">View note <span aria-hidden="true">→</span></span>
                         </Link>
                         <div className="note-list-actions">
-                            <DeleteNoteButton noteId={note.id} />
+                            <DeleteNoteButton noteId={note.id!} />
                         </div>
                     </div>
                 </li>

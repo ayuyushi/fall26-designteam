@@ -1,25 +1,11 @@
-import Link from 'next/link';
+import Header from '@/components/header'
 import { getPublicNotes } from '@/services/note-data';
-import NotesList from './note-list';
+import NoteSection from './note-section';
 
-export default async function NotesPage() {
-  const { data: notes, error } = await getPublicNotes();
-
-  if (error) {
-    console.error('Failed to load notes:', error);
-    throw new Error('Failed to load notes.');
-  }
-  if (!notes) {
-    throw new Error('Failed to load notes: the query returned no data.');
-  }
-
+export default function NotesPage() {
   return (
     <main className="site-page">
-      <header className="site-header">
-        <Link className="site-header-link" href="/">Home</Link>
-        <p>ChompIn</p>
-        <Link className="site-header-link" href="/account">Profile</Link>
-      </header>
+      <Header visibility='auth' current='/notes'/>
       <section className="site-content notes-page-content">
         <div className="account-intro notes-intro">
           <p className="site-eyebrow">Explore and share</p>
@@ -31,7 +17,7 @@ export default async function NotesPage() {
             <p className="site-eyebrow">View public content here</p>
             <h2 id="public-notes-title">Public notes</h2>
           </div>
-          <NotesList notes={notes} />
+          <NoteSection getNoteFunction={getPublicNotes}/>
         </section>
       </section>
     </main>
