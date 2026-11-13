@@ -1,15 +1,11 @@
-import Link from 'next/link';
+import Header from '@/components/header'
 import { getPublicNotes } from '@/services/note-data';
 import NoteSection from './note-section';
 
 export default function NotesPage() {
   return (
     <main className="site-page">
-      <header className="site-header">
-        <Link className="site-header-link" href="/">Home</Link>
-        <p>ChompIn</p>
-        <Link className="site-header-link" href="/account">Profile</Link>
-      </header>
+      <Header visibility='auth' current='/notes'/>
       <section className="site-content notes-page-content">
         <div className="account-intro notes-intro">
           <p className="site-eyebrow">Explore and share</p>

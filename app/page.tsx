@@ -1,13 +1,10 @@
 import Link from 'next/link'
+import Header from '@/components/header'
 
 export default async function Home() {
   return (
     <main className="site-page">
-      <header className="site-header">
-        <span className="site-header-spacer" aria-hidden="true" />
-        <p>ChompIn</p>
-        <Link className="site-header-link" href="/login">Log in</Link>
-      </header>
+      <Header visibility='guest' current='/'/>
       <section className="home-content">
         <p className="site-eyebrow">Create. Share. Connect. </p>
         <h1>ChompIn.</h1>

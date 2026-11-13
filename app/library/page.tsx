@@ -1,19 +1,21 @@
-import Link from 'next/link';
-import { getOwnNotes } from '@/services/note-data';
-import NoteForm from './note-form';
-import NoteSection from './note-section';
+import Header from '@/components/header'
+import { getOwnNotes } from '@/services/note-data'
+import NoteForm from './note-form'
+import NoteSection from './note-section'
+import { createClient } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation'
 
+export default async function MyLibrary() {
+  const supabase = await createClient()
 
-export default function MyLibrary() {
+  const { data: claimsData } = await supabase.auth.getClaims()
+  if(!claimsData?.claims){
+    redirect('/login') //redirect to login page if not valid authentication
+  }
+    
   return (
     <main className="site-page">
-      <header className="site-header">
-        <Link className="site-header-link" href="/notes">Search notes</Link>
-        <p>ChompIn</p>
-        <nav className="site-header-nav" aria-label="Main navigation">
-          <Link className="site-header-link" href="/account">Profile</Link>
-        </nav>
-      </header>
+      <Header visibility='auth' current='/library'/>
       <section className="site-content notes-page-content">
         <div className="account-intro notes-intro">
           <p className="site-eyebrow">Your space</p>

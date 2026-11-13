@@ -1,13 +1,10 @@
 import Link from 'next/link'
+import Header from '@/components/header'
 
 export default function ErrorPage() {
   return (
     <main className="site-page">
-      <header className="site-header">
-        <Link className="site-header-link" href="/">Home</Link>
-        <p>ChompIn</p>
-        <span className="site-header-spacer" aria-hidden="true" />
-      </header>
+      <Header visibility='guest' current='/error'/>
       <section className="site-content error-content">
         <div className="error-card">
           <p className="site-eyebrow">Oops!</p>
