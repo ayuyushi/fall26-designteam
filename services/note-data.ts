@@ -2,41 +2,43 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/utils/supabase/server';
+import { executeSupabaseQuery } from '@/utils/supabase/query';
 import type Note from '@/types/note';
 
 type newNote = Omit<Note, 'id'>;
 
 export async function createNote(noteData: newNote | Note[]) {
-    const supabase = await createClient()
+    const supabase = await createClient();
 
-    const { data, error } = await supabase
+    const result = await executeSupabaseQuery(
+      supabase
         .from("note")
         .insert(noteData)
-        .select('id, class_title, class_code, semester, professor, unit, description, is_public')
+        .select('id, class_title, class_code, semester, professor, unit, description, is_public'),
+      'create note',
+      'Could not create the note. Please try again.'
+    );
 
-    if (error) {
-        console.error(error)
+    if (!result.error) {
+      revalidatePath('/notes');
+      revalidatePath('/library');
     }
 
-    revalidatePath('/notes')
-    revalidatePath('/library')
-    return {data: data, error: error};
+    return result;
 }
 
 export async function getNote(noteId: string) {
-    const supabase = await createClient()
+    const supabase = await createClient();
 
-    const { data, error } = await supabase
+    return executeSupabaseQuery(
+      supabase
         .from("note")
         .select('id, class_title, class_code, semester, professor, unit, description, is_public')
         .eq("id", noteId)
-        .maybeSingle()
-
-    if (error) {
-        console.error(error)
-    }
-
-    return {data: data, error: error};
+        .maybeSingle(),
+      'load note',
+      'Could not load the note. Please try again.'
+    );
 }
 
 export async function getPublicNotes(filters: Record<string, string> = {}, num: number = 20, offset: number = 0) {
@@ -52,13 +54,13 @@ export async function getPublicNotes(filters: Record<string, string> = {}, num: 
         query = query.like(key, `%${filters[key]}%`);
     }
 
-    const { data, count, error } = await query;
+    const result = await executeSupabaseQuery(
+      query,
+      'load public notes',
+      'Could not load public notes. Please try again.'
+    );
 
-    if (error) {
-        console.error('Failed to load public notes:', error);
-    }
-
-    return { data, count, error };
+    return result;
 }
 
 export async function getOwnNotes(filters: Record<string, string> = {}, num: number = 20, offset: number = 0) {
@@ -83,28 +85,31 @@ export async function getOwnNotes(filters: Record<string, string> = {}, num: num
         query = query.like(key, `%${filters[key]}%`);
     }
 
-    const { data, count, error } = await query;
+    const result = await executeSupabaseQuery(
+      query,
+      'load the user collection',
+      'Could not load your collection. Please try again.'
+    );
 
-    if (error) {
-        console.error('Failed to load the user collection:', error);
-    }
-
-    return { data, count, error };
+    return result;
 }
 
 export async function deleteNote(noteId: string) {
-    const supabase = await createClient()
+    const supabase = await createClient();
 
-    const { data, error } = await supabase
+    const result = await executeSupabaseQuery(
+      supabase
         .from("note")
         .delete()
-        .eq("id", noteId)
+        .eq("id", noteId),
+      'delete note',
+      'Could not delete the note. Please try again.'
+    );
 
-    if (error) {
-        console.error(error)
+    if (!result.error) {
+      revalidatePath('/notes');
+      revalidatePath('/library');
     }
 
-    revalidatePath('/notes')
-    revalidatePath('/library')
-    return {data: data, error: error};
+    return result;
 }

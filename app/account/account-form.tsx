@@ -18,7 +18,10 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
       setLoading(true)
 
-      const { data } = await getProfile(claims.sub)
+      const { data, error } = await getProfile(claims.sub)
+      if (error) {
+        throw new Error(error)
+      }
 
       if (data) {
         setBio(data.bio)
@@ -44,10 +47,13 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
       setLoading(true)
   
-      await updateProfile({
+      const { error } = await updateProfile({
         bio,
         updated_at: new Date().toISOString(),
       });
+      if (error) {
+        throw new Error(error)
+      }
     } catch (error) {
       alert('Error updating the data!')
       console.log(error)

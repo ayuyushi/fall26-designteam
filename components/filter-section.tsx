@@ -47,10 +47,9 @@ export default function FilterSection({getNoteFunction, setNotes} : FilterSectio
 
         if (error) {
             console.error('Failed to load notes:', error);
-            throw new Error('Failed to load notes.');
         }
         if (!data) {
-            throw new Error('Failed to load notes: the query returned no data.');
+            console.error('Failed to load notes: the query returned no data.');
         }
 
         setNotes(data);

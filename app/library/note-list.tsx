@@ -3,7 +3,7 @@ import DeleteNoteButton from './delete-note-button';
 import type Note from '@/types/note';
 
 export default function PrivateNotesList({ notes }: { notes: Note[]} ) {
-    if (notes.length === 0) {
+    if (notes?.length === 0) {
         return (
             <div className="notes-empty-state">
                 <h3>No notes in your collection yet</h3>
@@ -14,7 +14,7 @@ export default function PrivateNotesList({ notes }: { notes: Note[]} ) {
 
     return (
         <ul className="notes-list">
-            {notes.map((note) => (
+            {notes?.map((note) => (
                 <li key={note.id}>
                     <div className="note-list-card">
                         <Link className="note-list-link" href={`/library/${note.id}`}>

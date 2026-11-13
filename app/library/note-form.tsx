@@ -23,10 +23,10 @@ export default function NoteForm() {
           is_public: true,
       }
 
-      const {data, error} = await createNote(input_data);
+      const { error } = await createNote(input_data);
 
       if (error) {
-        alert(`Upload failed: ${error}`);
+        alert(`Creation failed: ${error}`);
       } else {
         alert("New note created in supabase successfully!");
       }
