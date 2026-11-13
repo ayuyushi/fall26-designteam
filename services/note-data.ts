@@ -4,7 +4,9 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@/utils/supabase/server';
 import type Note from '@/types/note';
 
-export async function createNote(noteData: Partial<Note> | Partial<Note>[]) {
+type newNote = Omit<Note, 'id'>;
+
+export async function createNote(noteData: newNote | Note[]) {
     const supabase = await createClient()
 
     const { data, error } = await supabase
@@ -37,22 +39,29 @@ export async function getNote(noteId: string) {
     return {data: data, error: error};
 }
 
-export async function getPublicNotes() {
+export async function getPublicNotes(filters: Record<string, string>, num: number = 20, offset: number) {
     const supabase = await createClient();
 
-    const { data, error } = await supabase
+    let query = supabase
         .from('note')
-        .select('*')
-        .eq('is_public', true);
+        .select('*', { count: 'exact' })
+        .eq('is_public', true)
+        .range(offset, offset + num - 1);
+
+    for (const key in filters) {
+        query = query.like(key, `%${filters[key]}%`);
+    }
+
+    const { data, count, error } = await query;
 
     if (error) {
         console.error('Failed to load public notes:', error);
     }
 
-    return { data, error };
+    return { data, count, error };
 }
 
-export async function getOwnNotes() {
+export async function getOwnNotes(filters: Record<string, string>, num: number, offset: number) {
     const supabase = await createClient();
     const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
 
@@ -64,16 +73,23 @@ export async function getOwnNotes() {
         throw new Error('A user must be signed in to load their collection.');
     }
 
-    const { data, error } = await supabase
+    let query = supabase
         .from('note')
-        .select('*')
-        .eq('author_id', claimsData.claims.sub);
+        .select('*', { count: 'exact' })
+        .eq('author_id', claimsData.claims.sub)
+        .range(offset, offset + num);
+
+    for (const key in filters) {
+        query = query.like(key, `%${filters[key]}%`);
+    }
+
+    const { data, count, error } = await query;
 
     if (error) {
         console.error('Failed to load the user collection:', error);
     }
 
-    return { data, error };
+    return { data, count, error };
 }
 
 export async function deleteNote(noteId: string) {

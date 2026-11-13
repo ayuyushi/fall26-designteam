@@ -5,7 +5,7 @@ type NotesListProps = {
     notes: Note[];
 };
 
-export default function NotesList({ notes }: NotesListProps) {
+export default function PublicNotesList({ notes }: NotesListProps) {
     if (notes.length === 0) {
         return (
             <div className="notes-empty-state">
@@ -24,7 +24,7 @@ export default function NotesList({ notes }: NotesListProps) {
                         <Link className="note-list-link" href={`/notes/${note.id}`}>
                             <span className="note-list-semester">{note.semester}</span>
                             <h3>{note.class_title}</h3>
-                            <p>{note.description || 'No description provided.'}</p>
+                            <p>{note.description ?? 'No description provided.'}</p>
                             <span className="note-list-open">View note <span aria-hidden="true">→</span></span>
                         </Link>
                     </div>

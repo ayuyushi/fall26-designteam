@@ -3,8 +3,8 @@ export default interface Note {
     class_title: string,
     class_code:  string,
     semester: string,
-    professor:  string,
-    unit: string,
-    description: string,
+    professor?:  string,
+    unit?: string,
+    description?: string,
     is_public: boolean,
 }

@@ -24,7 +24,7 @@ export default function NotesList({ notes }: { notes: Note[]} ) {
                             <span className="note-list-open">View note <span aria-hidden="true">→</span></span>
                         </Link>
                         <div className="note-list-actions">
-                            <DeleteNoteButton noteId={note.id} />
+                            <DeleteNoteButton noteId={note.id!} />
                         </div>
                     </div>
                 </li>
