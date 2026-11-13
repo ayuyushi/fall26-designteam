@@ -1,10 +1,14 @@
 import Link from 'next/link'
 import Header from '@/components/header'
+import { createClient } from '@/utils/supabase/server'
 
 export default async function Home() {
+  const supabase = await createClient()
+  const { data: claimsData } = await supabase.auth.getClaims()
+
   return (
     <main className="site-page">
-      <Header visibility='guest' current='/'/>
+      <Header visibility={!claimsData?.claims ? 'guest' : 'auth'} current='/'/>
       <section className="home-content">
         <p className="site-eyebrow">Create. Share. Connect. </p>
         <h1>ChompIn.</h1>

@@ -1,15 +1,15 @@
 'use client'
+
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { createClient } from '@/utils/supabase/client'
+import { getProfile, updateProfile } from '@/services/user'
 
 type Claims = { sub: string; email?: string; [key: string]: unknown }
 
 export default function AccountForm({ claims }: { claims: Claims | null }) {
-  const supabase = useMemo(() => createClient(), [])
   const [loading, setLoading] = useState(true)
-  const [bio, setBio] = useState<string | null>(null)
+  const [bio, setBio] = useState<string>("")
 
-  const getProfile = useCallback(async () => {
+  const getOwnProfile = useCallback(async () => {
     try {
       if (!claims?.sub) {
         setLoading(false)
@@ -18,17 +18,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
       setLoading(true)
 
-      const userId = claims.sub
-      const { data, error, status } = await supabase
-        .from('profile')
-        .select(`bio`)
-        .eq('id', userId)
-        .single()
-
-      if (error && status !== 406) {
-        console.log(error)
-        throw error
-      }
+      const { data } = await getProfile(claims.sub)
 
       if (data) {
         setBio(data.bio)
@@ -39,13 +29,13 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
     } finally {
       setLoading(false)
     }
-  }, [claims, supabase])
+  }, [claims])
 
   useEffect(() => {
-    getProfile()
-  }, [claims, getProfile])
+    getOwnProfile()
+  }, [claims, getOwnProfile])
 
-  async function updateProfile({bio}: {bio: string | null}) {
+  async function updateOwnProfile({bio}: {bio: string}) {
     try {
       if (!claims?.sub) {
         alert('You must be logged in to update your profile')
@@ -54,12 +44,10 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
       setLoading(true)
   
-      const { error } = await supabase.from('profile').update({
+      await updateProfile({
         bio,
         updated_at: new Date().toISOString(),
-      })
-      .eq('id', claims.sub)
-      if (error) throw error
+      });
     } catch (error) {
       alert('Error updating the data!')
       console.log(error)
@@ -92,7 +80,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
       <div>
         <button
           className="button primary block profile-submit"
-          onClick={() => updateProfile({bio})}
+          onClick={() => updateOwnProfile({bio})}
           disabled={loading}
         >
           {loading ? 'Loading ...' : 'Update'}
