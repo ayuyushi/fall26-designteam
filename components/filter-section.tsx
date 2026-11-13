@@ -10,7 +10,7 @@ const DEFAULT_FILTERS: Record<string, string> = {
   semester: '',
   professor:  '',
   unit: ''
-};
+}
 
 const PAGE_SIZE = 5; //TODO: PLACEHOLDER & MIGHT BECOME USESTATE IN FUTURE
 
@@ -41,34 +41,34 @@ export default function FilterSection({getNoteFunction, setNotes} : FilterSectio
     const debouncedFilters = useDebounce(filters);
 
     const getNotes = useCallback(async() => {
-    setLoading(true)
+        setLoading(true)
 
-    const {data, count, error} = await getNoteFunction(filters, PAGE_SIZE, (page - 1) * PAGE_SIZE);
+        const {data, count, error} = await getNoteFunction(filters, PAGE_SIZE, (page - 1) * PAGE_SIZE);
 
-    if (error) {
-        console.error('Failed to load notes:', error);
-        throw new Error('Failed to load notes.');
-    }
-    if (!data) {
-        throw new Error('Failed to load notes: the query returned no data.');
-    }
+        if (error) {
+            console.error('Failed to load notes:', error);
+            throw new Error('Failed to load notes.');
+        }
+        if (!data) {
+            throw new Error('Failed to load notes: the query returned no data.');
+        }
 
-    setNotes(data);
-    setNoteCount(count ?? 0);
+        setNotes(data);
+        setNoteCount(count ?? 0);
 
-    setLoading(false)
+        setLoading(false)
     }, [debouncedFilters, page]);
 
     useEffect(() => {
-    if (!debouncedFilters) 
-        return;
+        if (!debouncedFilters) 
+            return;
 
-    getNotes();
-    }, [debouncedFilters, page, getNotes])
+        getNotes();
+    }, [debouncedFilters, page, getNotes]);
     
     const handleFilterChange = (key: string, value: string) => {
-    setPage(1);
-    setFilters((prev) => ({ ...prev, [key]: value }));
+        setPage(1);
+        setFilters((prev) => ({ ...prev, [key]: value }));
     };
 
     const resetFilters = () => setFilters(DEFAULT_FILTERS);

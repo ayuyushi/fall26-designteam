@@ -1,3 +1,5 @@
+'use client'
+
 interface FilterBarProps {
   filters: Record<string, string>;
   onChange: (column: string, value: string) => void;

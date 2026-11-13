@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
 const NAV_ITEMS = [
   { label: 'Search Notes', path: '/notes', visibility: 'all' },
