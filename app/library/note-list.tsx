@@ -2,7 +2,7 @@ import Link from 'next/link';
 import DeleteNoteButton from './delete-note-button';
 import type Note from '@/types/note';
 
-export default function NotesList({ notes }: { notes: Note[]} ) {
+export default function PrivateNotesList({ notes }: { notes: Note[]} ) {
     if (notes.length === 0) {
         return (
             <div className="notes-empty-state">
