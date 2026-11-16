@@ -16,15 +16,15 @@ export default function NoteCard({ note }: {note: Note}) {
         </div>
         <div>
           <dt>Professor</dt>
-          <dd>{note.professor || 'Unknown'}</dd>
+          <dd>{note.professor ?? 'Unknown'}</dd>
         </div>
         <div>
           <dt>Unit</dt>
-          <dd>{note.unit || 'Unknown'}</dd>
+          <dd>{note.unit ?? 'Unknown'}</dd>
         </div>
         <div>
           <dt>Description</dt>
-          <dd>{note.description || 'No description provided.'}</dd>
+          <dd>{note.description ?? 'No description provided.'}</dd>
         </div>
       </dl>
     </section>
