@@ -1,24 +1,6 @@
-import { login, signup } from './actions'
+import { login, magicLinkLogin } from './actions'
+import SignUpForm from './SignUpForm'
 import Link from 'next/link'
-
-function SignUpForm() {
-  return (
-    <section className="auth-card signup-card" aria-labelledby="signup-title">
-      <h2 id="signup-title">Sign Up</h2>
-      <form>
-        <div className="auth-field">
-          <label htmlFor="signup-email">UF Email</label>
-          <input id="signup-email" name="email" type="email" autoComplete="email" pattern=".+@ufl\.edu" title="Please use your UF email address (@ufl.edu) to sign up" required />
-        </div>
-        <div className="auth-field">
-          <label htmlFor="signup-password">Password</label>
-          <input id="signup-password" name="password" type="password" autoComplete="new-password" required />
-        </div>
-        <button className="auth-submit" formAction={signup}>Sign up</button>
-      </form>
-    </section>
-  )
-}
 
 function LoginForm() {
   return (
@@ -39,6 +21,24 @@ function LoginForm() {
   )
 }
 
+
+function MagicLinkForm() {
+  return (
+    <section className="auth-card">
+      <h2>Continue without a password</h2>
+      <form>
+        <div className="auth-field">
+          <label htmlFor="magic-link-email">UF Email</label>
+          <input id="magic-link-email" name="email" type="email" autoComplete="email" required />
+        </div>
+        <button className="auth-submit" formAction={magicLinkLogin}>
+          Email me a login link
+        </button>
+      </form>
+    </section>
+  )
+}
+
 export default function LoginPage() {
   return (
     <main className="auth-page">
@@ -51,7 +51,11 @@ export default function LoginPage() {
           <LoginForm />
           <SignUpForm />
         </div>
+        <div className="auth-content">
+          <MagicLinkForm />
+        </div>
       </div>
     </main>
   )
 }
+
