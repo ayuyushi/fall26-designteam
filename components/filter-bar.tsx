@@ -23,7 +23,7 @@ return (
         <label className="block text-sm font-medium mb-1">Class Title</label>
         <input
           type="text"
-          value={filters.search}
+          value={filters.class_title}
           onChange={(e) => onChange('class_title', e.target.value)}
           placeholder="Class Title..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
@@ -34,7 +34,7 @@ return (
         <label className="block text-sm font-medium mb-1">Class Code</label>
         <input
           type="text"
-          value={filters.search}
+          value={filters.class_code}
           onChange={(e) => onChange('class_code', e.target.value)}
           placeholder="Class Code..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
@@ -45,7 +45,7 @@ return (
         <label className="block text-sm font-medium mb-1">Semester</label>
         <input
           type="text"
-          value={filters.search}
+          value={filters.semester}
           onChange={(e) => onChange('semester', e.target.value)}
           placeholder="Semester..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
@@ -56,7 +56,7 @@ return (
         <label className="block text-sm font-medium mb-1">Professor</label>
         <input
           type="text"
-          value={filters.search}
+          value={filters.professor}
           onChange={(e) => onChange('professor', e.target.value)}
           placeholder="Professor..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
@@ -67,7 +67,7 @@ return (
         <label className="block text-sm font-medium mb-1">Unit</label>
         <input
           type="text"
-          value={filters.search}
+          value={filters.unit}
           onChange={(e) => onChange('unit', e.target.value)}
           placeholder="Unit..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
