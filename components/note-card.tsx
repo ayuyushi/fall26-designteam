@@ -12,7 +12,7 @@ export default function NoteCard({ note }: {note: Note}) {
         </div>
         <div>
           <dt>Semester</dt>
-          <dd>{note.semester}</dd>
+          <dd>{note.semester_term + ' ' + note.semester_year}</dd>
         </div>
         <div>
           <dt>Professor</dt>
