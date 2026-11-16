@@ -18,7 +18,7 @@ export default function PrivateNotesList({ notes }: { notes: Note[]} ) {
                 <li key={note.id}>
                     <div className="note-list-card">
                         <Link className="note-list-link" href={`/library/${note.id}`}>
-                            <span className="note-list-semester">{note.semester}</span>
+                            <span className="note-list-semester">{note.semester_term + ' ' + note.semester_year}</span>
                             <h3>{note.class_title}</h3>
                             <p>{note.description || 'No description provided.'}</p>
                             <span className="note-list-open">View note <span aria-hidden="true">→</span></span>

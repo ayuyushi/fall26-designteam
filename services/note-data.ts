@@ -14,7 +14,7 @@ export async function createNote(noteData: newNote | Note[]) {
       supabase
         .from("note")
         .insert(noteData)
-        .select('id, class_title, class_code, semester, professor, unit, description, is_public'),
+        .select('id, class_title, class_code, semester_term, semester_year, professor, unit, description, is_public'),
       'create note',
       'Could not create the note. Please try again.'
     );
@@ -33,7 +33,7 @@ export async function getNote(noteId: string) {
     return executeSupabaseQuery(
       supabase
         .from("note")
-        .select('id, class_title, class_code, semester, professor, unit, description, is_public')
+        .select('id, class_title, class_code, semester_term, semester_year,  professor, unit, description, is_public')
         .eq("id", noteId)
         .maybeSingle(),
       'load note',
@@ -51,7 +51,7 @@ export async function getPublicNotes(filters: Record<string, string> = {}, num: 
         .range(offset, offset + num - 1);
 
     for (const key in filters) {
-        query = query.like(key, `%${filters[key]}%`);
+        query = query.ilike(key, `%${filters[key]}%`);
     }
 
     const result = await executeSupabaseQuery(

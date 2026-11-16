@@ -7,12 +7,13 @@ import type Note from '@/types/note';
 const DEFAULT_FILTERS: Record<string, string> = {
   class_title: '',
   class_code:  '',
-  semester: '',
+  semester_term: '',
+  semester_year: '',
   professor:  '',
   unit: ''
 }
 
-const PAGE_SIZE = 5; //TODO: PLACEHOLDER & MIGHT BECOME USESTATE IN FUTURE
+const PAGE_SIZE = 10; //TODO: PLACEHOLDER & MIGHT BECOME USESTATE IN FUTURE
 
 interface FilterSectionProps {
     getNoteFunction: (filters: Record<string, string>, num: number, offset: number) => any;

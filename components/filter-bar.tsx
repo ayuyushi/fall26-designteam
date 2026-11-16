@@ -43,11 +43,24 @@ return (
 
       <div>
         <label className="block text-sm font-medium mb-1">Semester</label>
+        <select
+          value={filters.semester_term}
+          onChange={(e) => onChange('semester_term', e.target.value)}
+          className="w-full px-3 py-2 border rounded-md text-sm"
+        >
+          <option value="" disabled> Choose a term </option>
+          <option value="Fall">Fall</option>
+          <option value="Spring">Spring</option>
+          <option value="Summer">Summer</option>
+          <option value="Summer A">Summer A</option>
+          <option value="Summer B">Summer B</option>
+          <option value="Summer C">Summer C</option>
+        </select>
         <input
           type="text"
-          value={filters.semester}
-          onChange={(e) => onChange('semester', e.target.value)}
-          placeholder="Semester..."
+          value={filters.semester_year}
+          onChange={(e) => onChange('semester_year', e.target.value)}
+          placeholder="2026..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
         />
       </div>
@@ -73,21 +86,6 @@ return (
           className="w-full px-3.5 py-2 border rounded-md text-sm"
         />
       </div>
-
-    {/* TODO: CHANGE SECTIONS LIKE SEMESTER TO BE CATEGORICAL */}
-      {/* <div>
-        <label className="block text-sm font-medium mb-1">Semester</label>
-        <select
-          value={filters.semester}
-          onChange={(e) => onChange('semester', e.target.value)}
-          className="w-full px-3 py-2 border rounded-md text-sm"
-        >
-          <option value="All">All Categories</option>
-          <option value="Electronics">Electronics</option>
-          <option value="Apparel">Apparel</option>
-          <option value="Home">Home</option>
-        </select>
-      </div> */}
     </aside>
   );
 }
