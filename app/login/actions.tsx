@@ -35,13 +35,16 @@ export async function signup(formData: FormData) {
   const rawEmail = formData.get('email')
   const password = formData.get('password')
    if(typeof rawEmail !== 'string' || typeof password !== 'string') {
+    console.error('Invalid signup details provided. Email and password must be strings.');
     redirect('/error?reason=invalid-signup-details')
   }
   const email = rawEmail.trim().toLowerCase()
   if(email==="" || password==="") {
+    console.error('Invalid signup details provided. Email and password cannot be empty.');
     redirect('/error?reason=invalid-signup-details')
   }
   if(!email.endsWith('@ufl.edu')) {
+    console.error('Invalid email provided. Only @ufl.edu addresses are allowed.');
     redirect('/error?reason=invalid-email')
   }
 
@@ -90,8 +93,11 @@ export async function magicLinkLogin(formData: FormData) {
 
   const { error } = await supabase.auth.signInWithOtp(data)
 
+
   if (error) {
+    console.error(`Magic link login failed: ${error.message}`);
     redirect('/error')
+    
   }
 
   redirect('/check-email')
