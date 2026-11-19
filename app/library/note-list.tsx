@@ -1,8 +1,11 @@
-import Link from 'next/link';
-import DeleteNoteButton from './delete-note-button';
-import type Note from '@/types/note';
+import PreviewNoteCard from '@/components/preview-note-card';
+import type NoteSpecific from '@/types/note-specific';
 
-export default function PrivateNotesList({ notes }: { notes: Note[]} ) {
+type NotesListProps = {
+    notes: NoteSpecific[];
+};
+
+export default function PrivateNotesList({ notes }: NotesListProps ) {
     if (notes?.length === 0) {
         return (
             <div className="notes-empty-state">
@@ -13,22 +16,10 @@ export default function PrivateNotesList({ notes }: { notes: Note[]} ) {
     }
 
     return (
-        <ul className="notes-list">
+        <section className="notes-list">
             {notes?.map((note) => (
-                <li key={note.id}>
-                    <div className="note-list-card">
-                        <Link className="note-list-link" href={`/library/${note.id}`}>
-                            <span className="note-list-semester">{note.semester_term + ' ' + note.semester_year}</span>
-                            <h3>{note.class_title}</h3>
-                            <p>{note.description || 'No description provided.'}</p>
-                            <span className="note-list-open">View note <span aria-hidden="true">→</span></span>
-                        </Link>
-                        <div className="note-list-actions">
-                            <DeleteNoteButton noteId={note.id!} />
-                        </div>
-                    </div>
-                </li>
+                <PreviewNoteCard key={note.id} note={note}/>
             ))}
-        </ul>
+        </section>
     );
 }

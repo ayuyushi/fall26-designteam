@@ -2,7 +2,7 @@ import Header from '@/components/header'
 import { getPublicNotes } from '@/services/note-data';
 import FilterBar from '@/components/filter-bar';
 import Pagination from  '@/components/pagination';
-import type Note from '@/types/note';
+import type NoteSpecific from '@/types/note-specific';
 import PublicNotesList from './note-list';
 
 interface FilterProps {
@@ -45,7 +45,7 @@ export default async function NotesPage({ searchParams }: FilterProps) {
           <div className="note-list">
               <FilterBar />
               <p>{`Page ${currentPage} of ${totalPages}`}</p>
-              <PublicNotesList notes={notes ? notes as Note[] : []} />
+              <PublicNotesList notes={notes ? notes as NoteSpecific[] : []} />
               <Pagination currentPage={currentPage} totalPages={totalPages}/>
           </div>
         </section>

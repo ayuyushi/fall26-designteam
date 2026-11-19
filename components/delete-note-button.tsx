@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { deleteNote } from '@/services/note-data';
 
 export default function DeleteNoteButton({ noteId }: {noteId: string}) {
   const [deleting, setDeleting] = useState(false);
+  const router = useRouter();
 
   async function handleDelete() {
     setDeleting(true);
@@ -14,6 +16,8 @@ export default function DeleteNoteButton({ noteId }: {noteId: string}) {
         console.error('Failed to delete note:', error);
         window.alert('Could not delete the note. Please try again.');
       }
+
+      router.push('/library')
     } catch (error) {
       console.error('Failed to delete note:', error);
       window.alert('Could not delete the note. Please try again.');
@@ -28,3 +32,5 @@ export default function DeleteNoteButton({ noteId }: {noteId: string}) {
     </button>
   );
 }
+
+

@@ -8,6 +8,7 @@ export default function NoteForm() {
   const [loading, setLoading] = useState(false);
   
   async function handleFormSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
     setLoading(true);
 
     try {

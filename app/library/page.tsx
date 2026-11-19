@@ -5,7 +5,7 @@ import { getOwnNotes } from '@/services/note-data'
 import Header from '@/components/header'
 import FilterBar from '@/components/filter-bar';
 import Pagination from  '@/components/pagination';
-import type Note from '@/types/note';
+import type NoteSpecific from '@/types/note-specific';
 
 import PrivateNotesList from './note-list';
 import NoteForm from './note-form'
@@ -58,8 +58,8 @@ export default async function MyLibrary({ searchParams }: FilterProps) {
             </div>
              <div className="note-list">
                 <FilterBar />
-                <p>{`${currentPage} of ${totalPages}`}</p>
-                <PrivateNotesList notes={notes ? notes as Note[] : []} />
+                <p>{`Page ${currentPage} of ${totalPages}`}</p>
+                <PrivateNotesList notes={notes ? notes as NoteSpecific[] : []} />
                 <Pagination currentPage={currentPage} totalPages={totalPages}/>
               </div>
           </section>

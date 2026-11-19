@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import type Note from '@/types/note';
+import PreviewNoteCard from '@/components/preview-note-card';
+import type NoteSpecific from '@/types/note-specific';
 
 type NotesListProps = {
-    notes: Note[];
+    notes: NoteSpecific[];
 };
 
 export default function NotesList({ notes }: NotesListProps) {
@@ -17,19 +18,10 @@ export default function NotesList({ notes }: NotesListProps) {
     }
 
     return (
-        <ul className="notes-list">
+        <section className="notes-list">
             {notes?.map((note) => (
-                <li key={note.id}>
-                    <div className="note-list-card">
-                        <Link className="note-list-link" href={`/notes/${note.id}`}>
-                            <span className="note-list-semester">{note.semester_term + ' ' + note.semester_year}</span>
-                            <h3>{note.class_title}</h3>
-                            <p>{note.description || 'No description provided.'}</p>
-                            <span className="note-list-open">View note <span aria-hidden="true">→</span></span>
-                        </Link>
-                    </div>
-                </li>
+                <PreviewNoteCard key={note.id} note={note} />
             ))}
-        </ul>
+        </section>
     );
 }
