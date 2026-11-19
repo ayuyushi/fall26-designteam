@@ -16,6 +16,7 @@ export default function Pagination({ totalPages, currentPage }: { totalPages: nu
 
   const setPageSize = (pageSize: string) => {
     const params = new URLSearchParams(searchParams.toString());
+    params.set('page', '1');
     params.set('pageSize', pageSize);
     replace(`${pathname}?${params.toString()}`);
   }
@@ -25,7 +26,7 @@ export default function Pagination({ totalPages, currentPage }: { totalPages: nu
         <div>
             <h3>Notes Per Page</h3>
             <select
-                defaultValue={currentPage}
+                defaultValue={10}
                 onChange={(e) => setPageSize(e.target.value)}
             >
                 <option value={10}>10</option>

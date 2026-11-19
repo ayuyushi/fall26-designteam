@@ -45,11 +45,11 @@ export default function filterBar() {
   }
 
   useEffect(() => {
-    if (!debounced)
+    if (!debounced || debounced === searchParams.toString())
       return;
 
     replace(`${pathname}?${paramsString}`);
-  }, [debounced])
+  }, [debounced, searchParams, pathname, replace])
 
   return (
     <aside className="w-64 p-4 border-r bg-white flex flex-col gap-6">
