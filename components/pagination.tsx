@@ -21,6 +21,10 @@ export default function Pagination({ totalPages, currentPage }: { totalPages: nu
     replace(`${pathname}?${params.toString()}`);
   }
 
+  if (totalPages === 0) {
+    return null;
+  }
+
   return (
     <div>
         <div>

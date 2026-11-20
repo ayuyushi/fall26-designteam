@@ -54,7 +54,7 @@ export default async function MyLibrary({ searchParams }: FilterProps) {
             </div>
              <div className="note-list">
                 <FilterBar />
-                <p>{`Page ${currentPage} of ${totalPages}`}</p>
+                {totalPages > 0 && <p>{`Page ${currentPage} of ${totalPages}`}</p>}
                 <NotesList notes={notes ? notes as NoteSpecific[] : []} />
                 <Pagination currentPage={currentPage} totalPages={totalPages}/>
               </div>
