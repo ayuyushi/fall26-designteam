@@ -8,7 +8,7 @@ import type NoteSpecific from '@/types/note-specific';
 
 type newNote = Omit<Note, 'id'>;
 
-export async function createNote(noteData: newNote | newNote[]) {
+export async function createNote(noteData: newNote) {
     const supabase = await createClient();
 
     const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
@@ -25,14 +25,15 @@ export async function createNote(noteData: newNote | newNote[]) {
       supabase
         .from("note")
         .insert(noteData)
-        .select('*'),
+        .select('*')
+        .maybeSingle(),
       'create note',
       'Could not create the note. Please try again.'
     );
 
     if (!result.error) {
       revalidatePath('/notes');
-      revalidatePath('/library');
+      revalidatePath('/dashboard/library');
     }
 
     return result;
@@ -167,10 +168,14 @@ export async function getFavoritedNotes(filters: Record<string, string> = {}, nu
       throw new Error('A user must be signed in to see their favorites.');
   }
 
-  const query = supabase
+  let query = supabase
       .from('user_favorites')
       .select('*', { count: 'exact' })
       .range(offset, offset + num);
+
+    for (const key in filters) {
+        query = query.ilike(key, `%${filters[key]}%`);
+    }
 
   const result = await executeSupabaseQuery(
     query,
