@@ -89,29 +89,30 @@ export default function filterBar() {
 
       <div className="note-filter-field">
         <label htmlFor="filter-semester-term">Semester</label>
-        <div className="note-filter-semester-controls">
-          <select
-            id="filter-semester-term"
-            value={params.get('semester_term') ?? ''}
-            onChange={(e) => updateFilter('semester_term', e.target.value)}
-          >
-            <option value="" disabled>Choose a term</option>
-            <option value="Fall">Fall</option>
-            <option value="Spring">Spring</option>
-            <option value="Summer">Summer</option>
-            <option value="Summer A">Summer A</option>
-            <option value="Summer B">Summer B</option>
-            <option value="Summer C">Summer C</option>
-          </select>
-          <input
-            id="filter-semester-year"
-            aria-label="Semester year"
-            type="text"
-            value={params.get('semester_year') ?? ''}
-            onChange={(e) => updateFilter('semester_year', e.target.value)}
-            placeholder="Year..."
-          />
-        </div>
+        <select
+          id="filter-semester-term"
+          value={params.get('semester_term') ?? ''}
+          onChange={(e) => updateFilter('semester_term', e.target.value)}
+        >
+          <option value="" disabled>Choose a term</option>
+          <option value="Fall">Fall</option>
+          <option value="Spring">Spring</option>
+          <option value="Summer">Summer</option>
+          <option value="Summer A">Summer A</option>
+          <option value="Summer B">Summer B</option>
+          <option value="Summer C">Summer C</option>
+        </select>
+      </div>
+
+      <div className="note-filter-field">
+        <label htmlFor="filter-semester-year">Year</label>
+        <input
+          id="filter-semester-year"
+          type="text"
+          value={params.get('semester_year') ?? ''}
+          onChange={(e) => updateFilter('semester_year', e.target.value)}
+          placeholder="Year..."
+        />
       </div>
 
       <div className="note-filter-field">

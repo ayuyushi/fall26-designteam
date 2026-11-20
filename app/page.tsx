@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Header from '@/components/header'
 import { createClient } from '@/utils/supabase/server'
 import chompInLogo from './ChompInFont.png'
+import chompInFavicon from './favicon.ico'
 
 export default async function Home() {
   const supabase = await createClient()
@@ -13,12 +14,21 @@ export default async function Home() {
       <Header visibility={!claimsData?.claims ? 'guest' : 'auth'} current='/home'/>
       <section className="home-content">
         <p className="site-eyebrow">Create. Share. Connect. </p>
-        <Image
-          className="home-logo"
-          src={chompInLogo}
-          alt="ChompIn"
-          priority
-        />
+        <div className="home-logo-row">
+          <Image
+            className="home-logo"
+            src={chompInLogo}
+            alt="ChompIn"
+            priority
+          />
+          <Image
+            className="home-favicon"
+            src={chompInFavicon}
+            alt=""
+            aria-hidden="true"
+            priority
+          />
+        </div>
         <p className="home-description">
           Making class notes more accessible and collaborative.
         </p>
