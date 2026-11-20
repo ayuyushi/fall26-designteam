@@ -12,9 +12,20 @@ import unstar from '../public/unstar.png';
 export default function NoteCard({ note }: { note: NoteSpecific }) {
   const [ favorite, setFavorite ] = useState(note.is_favorited);
 
-  const invertFavorite = (noteId: string) => {
-    favorite ? deleteFavoritedNote(noteId) : insertFavoritedNote(noteId);
-    setFavorite(!favorite);
+  const invertFavorite = async (noteId: string) => {
+    try {
+      const { error } = favorite ? await deleteFavoritedNote(noteId) : await insertFavoritedNote(noteId);
+        
+      if (error) {
+        console.log('Failed to favorite note:', error);
+        window.alert('Could not favorite the note. Please try again.');
+      }
+
+      setFavorite(!favorite);
+    } catch (error) {
+      console.log('Failed to favorite note:', error);
+      window.alert('Could not favorite the note. Please try again.');
+    }
   }
 
   return (

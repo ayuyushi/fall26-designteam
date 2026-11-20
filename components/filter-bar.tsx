@@ -104,7 +104,7 @@ export default function filterBar() {
           type="text"
           value={params.get('semester_year') ?? ''}
           onChange={(e) => updateFilter('semester_year', e.target.value)}
-          placeholder="2026..."
+          placeholder="Year..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
         />
       </div>
