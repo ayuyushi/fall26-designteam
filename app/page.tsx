@@ -1,6 +1,8 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import Header from '@/components/header'
 import { createClient } from '@/utils/supabase/server'
+import chompInLogo from './ChompInFont.png'
 
 export default async function Home() {
   const supabase = await createClient()
@@ -11,7 +13,12 @@ export default async function Home() {
       <Header visibility={!claimsData?.claims ? 'guest' : 'auth'} current='/home'/>
       <section className="home-content">
         <p className="site-eyebrow">Create. Share. Connect. </p>
-        <h1>ChompIn.</h1>
+        <Image
+          className="home-logo"
+          src={chompInLogo}
+          alt="ChompIn"
+          priority
+        />
         <p className="home-description">
           Making class notes more accessible and collaborative.
         </p>
@@ -21,7 +28,7 @@ export default async function Home() {
             <span className="home-action-title">Sign in or create an account</span>
             <span className="home-action-description">Jump into ChompIn with your UFL email.</span>
           </Link>
-          <Link className="home-action-card" href="/account">
+          <Link className="home-action-card" href="/dashboard/account">
             <span className="home-action-label">Your space</span>
             <span className="home-action-title">View your profile</span>
             <span className="home-action-description">Update your username and profile details.</span>

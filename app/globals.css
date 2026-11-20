@@ -409,16 +409,11 @@ input:focus-visible {
   background: #87417e;
 }
 
-.site-header p {
+.site-header-logo {
   grid-column: 2;
-  margin: 0;
-  color: #fff;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-align: center;
-  text-transform: uppercase;
+  justify-self: center;
+  width: auto;
+  height: 36px;
 }
 
 .site-header-link {
@@ -497,6 +492,19 @@ input:focus-visible {
   color: #704a69;
   font-size: clamp(1rem, 2vw, 1.15rem);
   line-height: 1.7;
+}
+
+.home-logo {
+  display: block;
+  width: min(420px, 90%);
+  height: auto;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.home-content .site-eyebrow,
+.home-content .home-description {
+  align-self: center;
 }
 
 .home-actions {
@@ -1111,9 +1119,8 @@ gap: clamp(20px, 4vw, 32px);
     padding-inline: 18px;
   }
 
-  .site-header p {
-    font-size: 0.8rem;
-    letter-spacing: 0.06em;
+  .site-header-logo {
+    height: 28px;
   }
 
   .site-header-link {
