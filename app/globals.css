@@ -430,10 +430,12 @@ select:focus-visible {
 }
 
 .site-header {
-  min-height: 84px;
-  padding: 12px clamp(18px, 5vw, 56px);
+  height: 72px;
+  min-height: 72px;
+  padding: 0 clamp(24px, 3vw, 40px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-rows: 72px;
   align-items: center;
   background: #87417e;
 }
@@ -442,7 +444,8 @@ select:focus-visible {
   grid-column: 2;
   justify-self: center;
   width: auto;
-  height: 52px;
+  height: 100px;
+  transform: translateY(10px);
 }
 
 .site-header-link {
@@ -632,12 +635,27 @@ select:focus-visible {
   line-height: 1.7;
 }
 
+.home-logo-row {
+  --home-logo-width: min(420px, calc((100% - 16px) / 1.459));
+  --home-favicon-width: calc(var(--home-logo-width) * 0.6394);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
 .home-logo {
   display: block;
-  width: min(420px, 90%);
+  width: var(--home-logo-width);
   height: auto;
-  margin: 0 auto;
-  text-align: center;
+}
+
+.home-favicon {
+  width: var(--home-favicon-width);
+  height: auto;
+  margin-left: calc(0px - var(--home-logo-width) * 0.07916 - var(--home-favicon-width) * 0.158);
+  flex: none;
 }
 
 .home-content .site-eyebrow,
@@ -885,13 +903,27 @@ select:focus-visible {
   gap: 18px;
   width: 100%;
   padding: 18px;
-  border: 1px solid #ead3e3;
-  border-radius: 8px;
-  background: #fff;
+  border: 1px solid #bc6fb1;
+  border-radius: 13px;
+  background: #f9cbe7;
 }
 
-.notes-section-heading + .note-list {
+.notes-section-heading + .notes-results-layout {
   margin-top: 16px;
+}
+
+.notes-results-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+  align-items: start;
+  gap: 24px;
+}
+
+.notes-results-layout > .note-list {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 16px;
 }
 
 .note-filters-heading {
@@ -917,9 +949,9 @@ select:focus-visible {
 
 .note-filter-fields {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: 16px 18px;
+  gap: 14px;
 }
 
 .note-filter-field {
@@ -938,12 +970,7 @@ select:focus-visible {
   border-radius: 6px;
 }
 
-.note-filter-semester-controls {
-  display: grid;
-  gap: 8px;
-}
-
-.note-filter-semester-controls select {
+.note-filter-field select {
   width: 100%;
 }
 
@@ -982,6 +1009,18 @@ select:focus-visible {
 
 .notes-secondary-button:hover:not(:disabled) {
   background: #f9e8f3;
+}
+
+.note-filters .note-filters-reset {
+  border-color: #87417e;
+  background: #87417e;
+  color: #fff;
+}
+
+.note-filters .note-filters-reset:hover:not(:disabled) {
+  border-color: #87417e;
+  background: #87417e;
+  color: #fff;
 }
 
 .notes-primary-button:disabled,
@@ -1363,6 +1402,12 @@ gap: clamp(20px, 4vw, 32px);
   transform: translateY(-1px);
 }
 
+@media (max-width: 860px) {
+  .notes-results-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 680px) {
   .create-note-page {
     min-height: calc(100dvh - 184px);
@@ -1445,12 +1490,15 @@ gap: clamp(20px, 4vw, 32px);
   }
 
   .site-header {
+    height: 72px;
     min-height: 72px;
     padding-inline: 18px;
+    grid-template-rows: 72px;
   }
 
   .site-header-logo {
-    height: 38px;
+    height: 100px;
+    transform: translateY(4px);
   }
 
   .site-header-link {

@@ -42,11 +42,13 @@ export default async function NotesPage({ searchParams }: FilterProps) {
             <p className="site-eyebrow">View public content here</p>
             <h2 id="public-notes-title">Public notes</h2>
           </div>
-          <div className="note-list">
-              <FilterBar />
+          <div className="notes-results-layout">
+            <div className="note-list">
               {totalPages > 0 && <p>{`Page ${currentPage} of ${totalPages}`}</p>}
               <PublicNotesList notes={notes ? notes as NoteSpecific[] : []} />
               <Pagination currentPage={currentPage} totalPages={totalPages}/>
+            </div>
+            <FilterBar />
           </div>
         </section>
       </section>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import chompInLogo from '@/app/ChompInFont.png';
+import chompInHeader from '@/app/ChompInHeader.png';
 
 const NAV_ITEMS = [
   { label: 'Search Notes', path: '/notes', visibility: 'all' },
@@ -21,7 +21,7 @@ export default function Header({ visibility, current }: { visibility: string, cu
             <Link className="site-header-link" href="/">Home</Link>
             <Image
                 className="site-header-logo"
-                src={chompInLogo}
+                src={chompInHeader}
                 alt="ChompIn"
                 priority
             />

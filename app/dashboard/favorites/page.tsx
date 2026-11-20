@@ -52,11 +52,13 @@ export default async function MyLibrary({ searchParams }: FilterProps) {
               <p className="site-eyebrow">Your library</p>
               <h2 id="your-notes-title">Your notes</h2>
             </div>
-             <div className="note-list">
-                <FilterBar />
+             <div className="notes-results-layout">
+               <div className="note-list">
                 {totalPages > 0 && <p>{`Page ${currentPage} of ${totalPages}`}</p>}
                 <NotesList notes={notes ? notes as NoteSpecific[] : []} />
                 <Pagination currentPage={currentPage} totalPages={totalPages}/>
+               </div>
+               <FilterBar />
               </div>
           </section>
         </div>
