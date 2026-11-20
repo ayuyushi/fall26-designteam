@@ -45,7 +45,7 @@ export default function NoteForm() {
   }
 
   return (
-    <section className="new-note-card" aria-labelledby="new-note-title">
+    <section className="new-note-card create-note-card" aria-labelledby="new-note-title">
         <div className="note-card-heading">
           <p className="site-eyebrow">Start sharing</p>
           <h2 id="new-note-title">Create a note</h2>

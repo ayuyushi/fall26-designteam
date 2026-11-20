@@ -52,83 +52,89 @@ export default function filterBar() {
   }, [debounced, searchParams, pathname, replace])
 
   return (
-    <aside className="w-64 p-4 border-r bg-white flex flex-col gap-6">
-      <div className="flex justify-between items-center">
-        <h2 className="font-semibold text-lg">Filters</h2>
+    <aside className="note-filters" aria-label="Filter notes">
+      <div className="note-filters-heading">
+        <h2>Filters</h2>
         <button 
           onClick={resetFilter} 
-          className="text-sm text-blue-600 hover:underline"
+          className="notes-secondary-button note-filters-reset"
+          type="button"
         >
           Reset
         </button>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Class Title</label>
+      <div className="note-filter-fields">
+      <div className="note-filter-field">
+        <label htmlFor="filter-class-title">Class Title</label>
         <input
+          id="filter-class-title"
           type="text"
           value={params.get('class_title') ?? ''}
           onChange={(e) => updateFilter('class_title', e.target.value)}
           placeholder="Class Title..."
-          className="w-full px-3.5 py-2 border rounded-md text-sm"
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Class Code</label>
+      <div className="note-filter-field">
+        <label htmlFor="filter-class-code">Class Code</label>
         <input
+          id="filter-class-code"
           type="text"
           value={params.get('class_code') ?? ''}
           onChange={(e) => updateFilter('class_code', e.target.value)}
           placeholder="Class Code..."
-          className="w-full px-3.5 py-2 border rounded-md text-sm"
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Semester</label>
-        <select
-          value={params.get('semester_term') ?? ''}
-          onChange={(e) => updateFilter('semester_term', e.target.value)}
-          className="w-full px-3 py-2 border rounded-md text-sm"
-        >
-          <option value="" disabled> Choose a term </option>
-          <option value="Fall">Fall</option>
-          <option value="Spring">Spring</option>
-          <option value="Summer">Summer</option>
-          <option value="Summer A">Summer A</option>
-          <option value="Summer B">Summer B</option>
-          <option value="Summer C">Summer C</option>
-        </select>
-        <input
-          type="text"
-          value={params.get('semester_year') ?? ''}
-          onChange={(e) => updateFilter('semester_year', e.target.value)}
-          placeholder="Year..."
-          className="w-full px-3.5 py-2 border rounded-md text-sm"
-        />
+      <div className="note-filter-field">
+        <label htmlFor="filter-semester-term">Semester</label>
+        <div className="note-filter-semester-controls">
+          <select
+            id="filter-semester-term"
+            value={params.get('semester_term') ?? ''}
+            onChange={(e) => updateFilter('semester_term', e.target.value)}
+          >
+            <option value="" disabled>Choose a term</option>
+            <option value="Fall">Fall</option>
+            <option value="Spring">Spring</option>
+            <option value="Summer">Summer</option>
+            <option value="Summer A">Summer A</option>
+            <option value="Summer B">Summer B</option>
+            <option value="Summer C">Summer C</option>
+          </select>
+          <input
+            id="filter-semester-year"
+            aria-label="Semester year"
+            type="text"
+            value={params.get('semester_year') ?? ''}
+            onChange={(e) => updateFilter('semester_year', e.target.value)}
+            placeholder="Year..."
+          />
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Professor</label>
+      <div className="note-filter-field">
+        <label htmlFor="filter-professor">Professor</label>
         <input
+          id="filter-professor"
           type="text"
           value={params.get('professor') ?? ''}
           onChange={(e) => updateFilter('professor', e.target.value)}
           placeholder="Professor..."
-          className="w-full px-3.5 py-2 border rounded-md text-sm"
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Unit</label>
+      <div className="note-filter-field">
+        <label htmlFor="filter-unit">Unit</label>
         <input
+          id="filter-unit"
           type="text"
           value={params.get('unit') ?? ''}
           onChange={(e) => updateFilter('unit', e.target.value)}
           placeholder="Unit..."
-          className="w-full px-3.5 py-2 border rounded-md text-sm"
         />
+      </div>
       </div>
     </aside>
   );
