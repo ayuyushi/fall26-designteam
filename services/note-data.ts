@@ -4,24 +4,36 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@/utils/supabase/server';
 import { executeSupabaseQuery } from '@/utils/supabase/query';
 import type Note from '@/types/note';
+import type NoteSpecific from '@/types/note-specific';
 
 type newNote = Omit<Note, 'id'>;
 
-export async function createNote(noteData: newNote | Note[]) {
+export async function createNote(noteData: newNote) {
     const supabase = await createClient();
+
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
+
+    if (claimsError) {
+        console.error('Failed to verify the current user:', claimsError);
+        throw new Error('Failed to verify the current user.');
+    }
+    if (!claimsData?.claims) {
+        throw new Error('A user must be signed in to create notes.');
+    }
 
     const result = await executeSupabaseQuery(
       supabase
         .from("note")
         .insert(noteData)
-        .select('id, class_title, class_code, semester_term, semester_year, professor, unit, description, is_public'),
+        .select('*')
+        .maybeSingle(),
       'create note',
       'Could not create the note. Please try again.'
     );
 
     if (!result.error) {
       revalidatePath('/notes');
-      revalidatePath('/library');
+      revalidatePath('/dashboard/library');
     }
 
     return result;
@@ -30,22 +42,24 @@ export async function createNote(noteData: newNote | Note[]) {
 export async function getNote(noteId: string) {
     const supabase = await createClient();
 
-    return executeSupabaseQuery(
+    const result = executeSupabaseQuery(
       supabase
-        .from("note")
-        .select('id, class_title, class_code, semester_term, semester_year,  professor, unit, description, is_public')
+        .from("note_specific")
+        .select('*')
         .eq("id", noteId)
         .maybeSingle(),
       'load note',
       'Could not load the note. Please try again.'
     );
+
+    return result;
 }
 
 export async function getPublicNotes(filters: Record<string, string> = {}, num: number = 20, offset: number = 0) {
     const supabase = await createClient();
 
     let query = supabase
-        .from('note')
+        .from('note_specific')
         .select('*', { count: 'exact' })
         .eq('is_public', true)
         .range(offset, offset + num - 1);
@@ -76,9 +90,9 @@ export async function getOwnNotes(filters: Record<string, string> = {}, num: num
     }
 
     let query = supabase
-        .from('note')
+        .from('note_specific')
         .select('*', { count: 'exact' })
-        .eq('author_id', claimsData.claims.sub)
+        .eq('is_author', true)
         .range(offset, offset + num);
 
     for (const key in filters) {
@@ -112,4 +126,91 @@ export async function deleteNote(noteId: string) {
     }
 
     return result;
+}
+
+export async function insertFavoritedNote(noteId: string) {
+  const supabase = await createClient();
+
+  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
+
+  if (claimsError) {
+      console.error('Failed to verify the current user:', claimsError);
+      throw new Error('Failed to verify the current user.');
+  }
+  if (!claimsData?.claims) {
+      throw new Error('A user must be signed in to see their favorites.');
+  }
+
+  const query = supabase
+      .from('favorited_note')
+      .insert({'note_id': noteId, 'user_id': claimsData.claims.sub})
+      .select('*');
+
+  const result = await executeSupabaseQuery(
+    query,
+    'add to favorites',
+    'Could not favorite note. Please try again.'
+  );
+
+  return result;
+}
+
+export async function getFavoritedNotes(filters: Record<string, string> = {}, num: number = 20, offset: number = 0) {
+  const supabase = await createClient();
+
+  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
+
+  if (claimsError) {
+      console.error('Failed to verify the current user:', claimsError);
+      throw new Error('Failed to verify the current user.');
+  }
+  if (!claimsData?.claims) {
+      throw new Error('A user must be signed in to see their favorites.');
+  }
+
+  let query = supabase
+      .from('user_favorites')
+      .select('*', { count: 'exact' })
+      .range(offset, offset + num);
+
+    for (const key in filters) {
+        query = query.ilike(key, `%${filters[key]}%`);
+    }
+
+  const result = await executeSupabaseQuery(
+    query,
+    'load the user\'s favorites',
+    'Could not load your favorite. Please try again.'
+  );
+
+  return result;
+}
+
+export async function deleteFavoritedNote(noteId: string) {
+  const supabase = await createClient();
+
+  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
+
+  if (claimsError) {
+      console.error('Failed to verify the current user:', claimsError);
+      throw new Error('Failed to verify the current user.');
+  }
+  if (!claimsData?.claims) {
+      throw new Error('A user must be signed in to delete a favorite.');
+  }
+
+  const query = supabase
+      .from('favorited_note')
+      .delete()
+      .eq('note_id', noteId)
+      .eq('user_id', claimsData.claims.sub)
+      .select('*');
+
+  const result = await executeSupabaseQuery(
+    query,
+    'delete from favorites',
+    'Could not remove note from favorites. Please try again.'
+  );
+
+  return result;
 }

@@ -8,7 +8,7 @@ export default async function Home() {
 
   return (
     <main className="site-page">
-      <Header visibility={!claimsData?.claims ? 'guest' : 'auth'} current='/'/>
+      <Header visibility={!claimsData?.claims ? 'guest' : 'auth'} current='/home'/>
       <section className="home-content">
         <p className="site-eyebrow">Create. Share. Connect. </p>
         <h1>ChompIn.</h1>

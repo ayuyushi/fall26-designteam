@@ -1,18 +1,62 @@
 'use client'
 
-interface FilterBarProps {
-  filters: Record<string, string>;
-  onChange: (column: string, value: string) => void;
-  onReset: () => void;
+import { useState, useEffect } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
+function useDebounce<T>(value: T, delay: number = 400): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
 }
 
-export default function filterBar({ filters, onChange, onReset } : FilterBarProps) {
-return (
+export default function filterBar() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const [paramsString, setParamsString] = useState(searchParams.toString());
+  const params = new URLSearchParams(paramsString);
+  const debounced = useDebounce(paramsString);
+
+  const { replace } = useRouter();
+
+  const updateFilter = (key: string, value: string) => {
+    const params = new URLSearchParams(paramsString);
+    params.set('page', '1');
+
+    if (value && value !== '') {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+
+    setParamsString(params.toString());
+  }
+
+  const resetFilter = () => {
+    setParamsString('');
+    replace(pathname);
+  }
+
+  useEffect(() => {
+    if (!debounced || debounced === searchParams.toString())
+      return;
+
+    replace(`${pathname}?${paramsString}`);
+  }, [debounced, searchParams, pathname, replace])
+
+  return (
     <aside className="w-64 p-4 border-r bg-white flex flex-col gap-6">
       <div className="flex justify-between items-center">
         <h2 className="font-semibold text-lg">Filters</h2>
         <button 
-          onClick={onReset} 
+          onClick={resetFilter} 
           className="text-sm text-blue-600 hover:underline"
         >
           Reset
@@ -23,8 +67,8 @@ return (
         <label className="block text-sm font-medium mb-1">Class Title</label>
         <input
           type="text"
-          value={filters.class_title}
-          onChange={(e) => onChange('class_title', e.target.value)}
+          value={params.get('class_title') ?? ''}
+          onChange={(e) => updateFilter('class_title', e.target.value)}
           placeholder="Class Title..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
         />
@@ -34,8 +78,8 @@ return (
         <label className="block text-sm font-medium mb-1">Class Code</label>
         <input
           type="text"
-          value={filters.class_code}
-          onChange={(e) => onChange('class_code', e.target.value)}
+          value={params.get('class_code') ?? ''}
+          onChange={(e) => updateFilter('class_code', e.target.value)}
           placeholder="Class Code..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
         />
@@ -44,8 +88,8 @@ return (
       <div>
         <label className="block text-sm font-medium mb-1">Semester</label>
         <select
-          value={filters.semester_term}
-          onChange={(e) => onChange('semester_term', e.target.value)}
+          value={params.get('semester_term') ?? ''}
+          onChange={(e) => updateFilter('semester_term', e.target.value)}
           className="w-full px-3 py-2 border rounded-md text-sm"
         >
           <option value="" disabled> Choose a term </option>
@@ -58,9 +102,9 @@ return (
         </select>
         <input
           type="text"
-          value={filters.semester_year}
-          onChange={(e) => onChange('semester_year', e.target.value)}
-          placeholder="2026..."
+          value={params.get('semester_year') ?? ''}
+          onChange={(e) => updateFilter('semester_year', e.target.value)}
+          placeholder="Year..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
         />
       </div>
@@ -69,8 +113,8 @@ return (
         <label className="block text-sm font-medium mb-1">Professor</label>
         <input
           type="text"
-          value={filters.professor}
-          onChange={(e) => onChange('professor', e.target.value)}
+          value={params.get('professor') ?? ''}
+          onChange={(e) => updateFilter('professor', e.target.value)}
           placeholder="Professor..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
         />
@@ -80,8 +124,8 @@ return (
         <label className="block text-sm font-medium mb-1">Unit</label>
         <input
           type="text"
-          value={filters.unit}
-          onChange={(e) => onChange('unit', e.target.value)}
+          value={params.get('unit') ?? ''}
+          onChange={(e) => updateFilter('unit', e.target.value)}
           placeholder="Unit..."
           className="w-full px-3.5 py-2 border rounded-md text-sm"
         />

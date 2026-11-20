@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import type Note from '@/types/note';
+import PreviewNoteCard from '@/components/preview-note-card';
+import type NoteSpecific from '@/types/note-specific';
 
 type NotesListProps = {
-    notes: Note[];
+    notes: NoteSpecific[];
 };
 
 export default function NotesList({ notes }: NotesListProps) {
@@ -11,25 +12,16 @@ export default function NotesList({ notes }: NotesListProps) {
             <div className="notes-empty-state">
                 <h3>No public notes yet</h3>
                 <p>Check back later, or visit your collection to create a note.</p>
-                <Link className="note-list-open" href="/library">Go to my collection →</Link>
+                <Link className="note-list-open" href="dashboard/library">Go to my collection →</Link>
             </div>
         );
     }
 
     return (
-        <ul className="notes-list">
+        <section className="notes-list">
             {notes?.map((note) => (
-                <li key={note.id}>
-                    <div className="note-list-card">
-                        <Link className="note-list-link" href={`/notes/${note.id}`}>
-                            <span className="note-list-semester">{note.semester_term + ' ' + note.semester_year}</span>
-                            <h3>{note.class_title}</h3>
-                            <p>{note.description || 'No description provided.'}</p>
-                            <span className="note-list-open">View note <span aria-hidden="true">→</span></span>
-                        </Link>
-                    </div>
-                </li>
+                <PreviewNoteCard key={note.id} note={note} />
             ))}
-        </ul>
+        </section>
     );
 }
