@@ -438,6 +438,16 @@ input:focus-visible {
   gap: clamp(12px, 2vw, 28px);
 }
 
+.site-side-nav {
+  min-height: 72px;
+  padding: 12px clamp(18px, 5vw, 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  background: #87417e;
+}
+
 .site-header-link:last-child {
   grid-column: 3;
   justify-self: end;
@@ -641,7 +651,6 @@ input:focus-visible {
 
 .notes-workspace {
   display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
   align-items: start;
   gap: clamp(20px, 4vw, 36px);
 }

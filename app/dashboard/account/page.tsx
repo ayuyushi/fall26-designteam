@@ -1,5 +1,4 @@
 import AccountForm from './account-form'
-import Header from '@/components/header'
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 
@@ -13,7 +12,6 @@ export default async function Account() {
 
   return (
     <main className="site-page">
-      <Header visibility='auth' current='/account'/>
       <section className="site-content account-content">
         <div className="account-intro">
           <p className="site-eyebrow">Your space</p>

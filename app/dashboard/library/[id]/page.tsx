@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Header from '@/components/header'
 import { getNote } from '@/services/note-data';
 import { getNoteFileMetadata } from '@/services/file-metadata';
 import NoteCard from '@/components/note-card';
@@ -35,9 +34,8 @@ export default async function NotePage({ params }: NotePageProps) {
 
   return (
     <main className="site-page">
-      <Header visibility='auth' current='/library'/>
       <section className="site-content note-detail-content">
-        <Link className="note-back-link" href="/library">← Back to my collection</Link>
+        <Link className="note-back-link" href="/dashboard/library">← Back to my collection</Link>
         <NoteCard note={note} />
         <div className="file-workspace">
           <FileList files={files ?? []} />

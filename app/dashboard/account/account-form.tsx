@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getProfile, updateProfile } from '@/services/user'
 
 type Claims = { sub: string; email?: string; [key: string]: unknown }

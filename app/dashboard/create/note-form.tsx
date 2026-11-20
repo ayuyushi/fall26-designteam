@@ -2,10 +2,12 @@
 
 import { createNote } from "@/services/note-data";
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 import type Note from '@/types/note';
 
 export default function NoteForm() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   
   async function handleFormSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -25,12 +27,13 @@ export default function NoteForm() {
           is_public: true,
       }
 
-      const { error } = await createNote(input_data);
+      const { data, error } = await createNote(input_data);
 
       if (error) {
         alert(`Creation failed: ${error}`);
       } else {
         alert("New note created in supabase successfully!");
+        router.push(`/dashboard/library/${data.id}`);
       }
     } catch (error) {
       const message =
