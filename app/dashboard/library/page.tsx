@@ -5,6 +5,12 @@ import { getOwnNotes } from '@/services/note-data';
 import NotesSection from '@/components/notes-section';
 import type NoteSpecific from '@/types/note-specific';
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Library'
+};
+
 interface FilterProps {
   searchParams: Promise<{ [key: string]: string }>;
 };

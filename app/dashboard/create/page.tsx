@@ -2,6 +2,12 @@ import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import NoteForm from './note-form'
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Create Notes"
+};
+
 export default async function CreatePage() {
     const supabase = await createClient();
 
