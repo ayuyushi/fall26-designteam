@@ -6,17 +6,20 @@ type NotesListProps = {
     notes: NoteSpecific[];
 };
 
-export default function NotesList({ notes }: NotesListProps) {
+export default function NotesList({ notes } : NotesListProps) {
     if (notes?.length === 0) {
         return (
             <div className="notes-empty-state">
-                <h3>No favorited notes yet</h3>
-                <p>Search for notes to add to your favorites collection.</p>
-                <Link className="note-list-open" href="/notes">Go to my collection →</Link>
+                <h3>No notes found</h3>
+                <div className="note-file-actions">
+                    <Link className="note-list-open" href="/notes">Search Public Notes →</Link>
+                    <Link className="note-list-open" href="dashboard/library">Go to my collection →</Link>
+                    <Link className="note-list-open" href="dashboard/create">Create a note →</Link>
+                </div>
             </div>
         );
     }
-    
+
     return (
         <section className="notes-list">
             {notes?.map((note) => (

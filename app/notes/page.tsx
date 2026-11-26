@@ -1,9 +1,7 @@
-import Header from '@/components/header'
+import Header from '@/components/header';
 import { getPublicNotes } from '@/services/note-data';
-import FilterBar from '@/components/filter-bar';
-import Pagination from  '@/components/pagination';
+import NotesSection from '@/components/notes-section';
 import type NoteSpecific from '@/types/note-specific';
-import PublicNotesList from './note-list';
 
 interface FilterProps {
   searchParams: Promise<{ [key: string]: string }>;
@@ -42,14 +40,10 @@ export default async function NotesPage({ searchParams }: FilterProps) {
             <p className="site-eyebrow">View public content here</p>
             <h2 id="public-notes-title">Public notes</h2>
           </div>
-          <div className="notes-results-layout">
-            <div className="note-list">
-              {totalPages > 0 && <p>{`Page ${currentPage} of ${totalPages}`}</p>}
-              <PublicNotesList notes={notes ? notes as NoteSpecific[] : []} />
-              <Pagination currentPage={currentPage} totalPages={totalPages}/>
-            </div>
-            <FilterBar />
-          </div>
+          <NotesSection 
+            currentPage={currentPage} 
+            totalPages={totalPages} 
+            notes={notes ? notes as NoteSpecific[] : []}/>
         </section>
       </section>
     </main>

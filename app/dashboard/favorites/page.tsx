@@ -1,12 +1,8 @@
-import { createClient } from '@/utils/supabase/server'
-import { redirect } from 'next/navigation'
-import { getFavoritedNotes } from '@/services/note-data'
-
-import FilterBar from '@/components/filter-bar';
-import Pagination from  '@/components/pagination';
+import { createClient } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
+import { getFavoritedNotes } from '@/services/note-data';
+import NotesSection from '@/components/notes-section';
 import type NoteSpecific from '@/types/note-specific';
-
-import NotesList from './note-list';
 
 interface FilterProps {
   searchParams: Promise<{ [key: string]: string }>;
@@ -52,14 +48,10 @@ export default async function MyLibrary({ searchParams }: FilterProps) {
               <p className="site-eyebrow">Your library</p>
               <h2 id="your-notes-title">Your notes</h2>
             </div>
-             <div className="notes-results-layout">
-               <div className="note-list">
-                {totalPages > 0 && <p>{`Page ${currentPage} of ${totalPages}`}</p>}
-                <NotesList notes={notes ? notes as NoteSpecific[] : []} />
-                <Pagination currentPage={currentPage} totalPages={totalPages}/>
-               </div>
-               <FilterBar />
-              </div>
+            <NotesSection 
+              currentPage={currentPage} 
+              totalPages={totalPages} 
+              notes={notes ? notes as NoteSpecific[] : []}/>
           </section>
         </div>
       </section>
