@@ -93,10 +93,10 @@ export async function getOwnNotes(filters: Record<string, string> = {}, num: num
         .from('note_specific')
         .select('*', { count: 'exact' })
         .eq('is_author', true)
-        .range(offset, offset + num);
+        .range(offset, offset + num - 1);
 
     for (const key in filters) {
-        query = query.like(key, `%${filters[key]}%`);
+        query = query.ilike(key, `%${filters[key]}%`);
     }
 
     const result = await executeSupabaseQuery(
@@ -171,7 +171,7 @@ export async function getFavoritedNotes(filters: Record<string, string> = {}, nu
   let query = supabase
       .from('user_favorites')
       .select('*', { count: 'exact' })
-      .range(offset, offset + num);
+      .range(offset, offset + num - 1);
 
     for (const key in filters) {
         query = query.ilike(key, `%${filters[key]}%`);

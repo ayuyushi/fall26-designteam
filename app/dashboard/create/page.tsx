@@ -1,6 +1,21 @@
+import { createClient } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
 import NoteForm from './note-form'
 
-export default function CreatePage() {
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Create Notes"
+};
+
+export default async function CreatePage() {
+    const supabase = await createClient();
+
+    const { data: claimsData } = await supabase.auth.getClaims()
+    if(!claimsData?.claims){
+        redirect('/login') //redirect to login page if not valid authentication
+    };
+
     return (
     <main className="site-page create-note-page">
         <section className="site-content create-note-content">

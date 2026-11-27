@@ -1,6 +1,13 @@
 import Link from 'next/link'
 import Header from '@/components/header'
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "ChompIn | ERROR"
+};
+
+
 const ERROR_DETAILS: Record<string, { reference: string; description: string }> = {
   'invalid-email': {
     reference: 'SIGNUP_UFL_EMAIL_REQUIRED',

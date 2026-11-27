@@ -1,6 +1,13 @@
 import { login, signup } from './actions'
 import Header from '@/components/header'
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "ChompIn | Login Page"
+};
+
+
 function SignUpForm() {
   return (
     <section className="auth-card signup-card" aria-labelledby="signup-title">

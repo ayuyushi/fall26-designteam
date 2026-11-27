@@ -1,12 +1,15 @@
-import { createClient } from '@/utils/supabase/server'
-import { redirect } from 'next/navigation'
-import { getOwnNotes } from '@/services/note-data'
+import { createClient } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
+import { getOwnNotes } from '@/services/note-data';
 
-import FilterBar from '@/components/filter-bar';
-import Pagination from  '@/components/pagination';
+import NotesSection from '@/components/notes-section';
 import type NoteSpecific from '@/types/note-specific';
 
-import PrivateNotesList from './note-list';
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Library'
+};
 
 interface FilterProps {
   searchParams: Promise<{ [key: string]: string }>;
@@ -15,12 +18,12 @@ interface FilterProps {
 const DEFAULT_PAGE_SIZE = 10;
 
 export default async function MyLibrary({ searchParams }: FilterProps) {
-  const supabase = await createClient()
+  const supabase = await createClient();
 
   const { data: claimsData } = await supabase.auth.getClaims()
   if(!claimsData?.claims){
     redirect('/login') //redirect to login page if not valid authentication
-  }
+  };
 
   const resolvedParams = await searchParams;
 
@@ -31,7 +34,7 @@ export default async function MyLibrary({ searchParams }: FilterProps) {
     semester_year: resolvedParams.semester_year ?? '',
     professor:  resolvedParams.professor ?? '',
     unit: resolvedParams.unit ?? ''
-  }
+  };
 
   const currentPage = Number(resolvedParams.page) || 1;
   const pageSize = Number(resolvedParams.pageSize) || DEFAULT_PAGE_SIZE;
@@ -52,14 +55,10 @@ export default async function MyLibrary({ searchParams }: FilterProps) {
               <p className="site-eyebrow">Your library</p>
               <h2 id="your-notes-title">Your notes</h2>
             </div>
-             <div className="notes-results-layout">
-               <div className="note-list">
-                {totalPages > 0 && <p>{`Page ${currentPage} of ${totalPages}`}</p>}
-                <PrivateNotesList notes={notes ? notes as NoteSpecific[] : []} />
-                <Pagination currentPage={currentPage} totalPages={totalPages}/>
-               </div>
-               <FilterBar />
-              </div>
+            <NotesSection 
+              currentPage={currentPage} 
+              totalPages={totalPages} 
+              notes={notes ? notes as NoteSpecific[] : []}/>
           </section>
         </div>
       </section>
